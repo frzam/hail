@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"hail/internal/hailconfig"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -12,8 +14,15 @@ var addCmd = &cobra.Command{
 	Args:      cobra.ExactArgs(2),
 	ValidArgs: []string{"alias", "command"},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Add is called!")
+		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
+		defer hc.Close()
 
+		err := hc.Parse()
+		if err != nil {
+			fmt.Println("error while parsing", err)
+			os.Exit(1)
+		}
+		hc.Add(args[0], args[1])
 	},
 }
 
