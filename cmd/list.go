@@ -10,7 +10,7 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "list is used to print all the alias and commands",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list is called")
+		fmt.Println("list is called!")
 	},
 }
 
