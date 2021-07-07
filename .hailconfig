@@ -1,0 +1,11 @@
+Title = "hailconfig"
+
+[scripts]
+  [scripts.kube-logs]
+    command = "kubectl logs -f pod"
+  [scripts.oc-login]
+    command = "oc login -u farzam -p"
+  [scripts.oc-server]
+    command = "oc whoami --show-server"
+  [scripts.pods]
+    command = "oc get pods -n apiconnect"
