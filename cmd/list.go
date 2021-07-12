@@ -14,9 +14,10 @@ var listCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 		defer hc.Close()
+
 		err := hc.Parse()
 		if err != nil {
-			fmt.Println("error in list : ", err)
+			fmt.Println("error in list: ", err)
 			os.Exit(2)
 		}
 		return hc.List()

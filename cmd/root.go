@@ -16,7 +16,6 @@ var rootCmd = &cobra.Command{
 }
 
 func run(cmd *cobra.Command, args []string) error {
-	fmt.Println("root is called!")
 	return nil
 }
 
@@ -25,8 +24,4 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-}
-
-func init() {
-	fmt.Println("root init")
 }

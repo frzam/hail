@@ -8,9 +8,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const updateExample = `  # Update Command with 'delete-pods' alias
+  hail update delete-pods 'kubectl delete pod $(kubectl get pods | grep Completed | awk '{print $1}')'`
+
 var updateCmd = &cobra.Command{
-	Use:   "update [alias] [command]",
-	Short: "it updates already present command",
+	Use:     "update [alias] [command]",
+	Short:   "It updates already present command.",
+	Example: updateExample,
+	Args:    cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 		defer hc.Close()

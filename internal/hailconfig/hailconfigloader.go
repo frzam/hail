@@ -1,6 +1,7 @@
 package hailconfig
 
 import (
+	"io"
 	"os"
 
 	"github.com/pkg/errors"
@@ -8,6 +9,14 @@ import (
 
 type hailconfigFile struct {
 	*os.File
+}
+type ReadWriteResetCloser interface {
+	io.ReadWriteCloser
+	Reset() error
+}
+
+type Loader interface {
+	Load() ([]ReadWriteResetCloser, error)
 }
 
 type StandardHailConfigLoader struct{}

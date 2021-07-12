@@ -2,20 +2,11 @@ package hailconfig
 
 import (
 	"fmt"
-	"io"
+	"os"
 
 	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
 )
-
-type ReadWriteResetCloser interface {
-	io.ReadWriteCloser
-	Reset() error
-}
-
-type Loader interface {
-	Load() ([]ReadWriteResetCloser, error)
-}
 
 type script struct {
 	Command string `toml:"command"`
@@ -24,7 +15,7 @@ type script struct {
 type Hailconfig struct {
 	loader Loader
 	f      ReadWriteResetCloser
-	config config
+	config
 }
 type config struct {
 	Title   string
@@ -43,11 +34,12 @@ func (hc *Hailconfig) Close() error {
 	return hc.f.Close()
 }
 
+// Add is used to add a new entry to scipts map.
 func (hc *Hailconfig) Add(alias, command string) {
 	sc := script{
 		Command: command,
 	}
-	hc.config.Scripts[alias] = sc
+	hc.Scripts[alias] = sc
 }
 
 func (hc *Hailconfig) Save() error {
@@ -59,8 +51,8 @@ func (hc *Hailconfig) Save() error {
 }
 
 func (hc *Hailconfig) List() error {
-	for alias, script := range hc.config.Scripts {
-		fmt.Printf("%s\t\t%s\n", alias, script.Command)
+	for alias, script := range hc.Scripts {
+		fmt.Fprintf(os.Stdout, "%s\t\t%s\n", alias, script.Command)
 	}
 	return nil
 }
@@ -73,8 +65,13 @@ func (hc *Hailconfig) Update(alias, command string) error {
 }
 
 func (hc *Hailconfig) IsPresent(alias string) bool {
-	_, found := hc.config.Scripts[alias]
+	_, found := hc.Scripts[alias]
 	return found
+}
+
+func (hc *Hailconfig) Get(alias string) (string, error) {
+	return hc.Scripts[alias].Command, nil
+
 }
 
 func (hc *Hailconfig) Parse() error {

@@ -19,7 +19,7 @@ var addCmd = &cobra.Command{
 
 		err := hc.Parse()
 		if err != nil {
-			fmt.Println("error while parsing", err)
+			fmt.Println("error while parsing: ", err)
 			os.Exit(1)
 		}
 		hc.Add(args[0], args[1])
