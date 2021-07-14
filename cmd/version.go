@@ -12,7 +12,7 @@ const (
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "it prints the current version of hail",
+	Short: "version prints the current version of hail",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(version)

@@ -11,11 +11,12 @@ var cfgFile string
 
 var rootCmd = &cobra.Command{
 	Use:   "hail",
-	Short: "hail is a cross platform script management tool",
+	Short: "hail is a cross-platform script management tool",
 	RunE:  run,
 }
 
 func run(cmd *cobra.Command, args []string) error {
+	//return runGet(cmd, args)
 	return nil
 }
 

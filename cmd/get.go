@@ -11,29 +11,31 @@ import (
 
 var getCmd = &cobra.Command{
 	Use:   "get [alias]",
-	Short: "It retrieves command basics the alias.",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		err := validateGet(args)
-		if err != nil {
-			fmt.Println("validation error:", err)
-			os.Exit(2)
-		}
-		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
-		defer hc.Close()
+	Short: "get retrieves command basics the alias.",
+	RunE:  runGet,
+}
 
-		err = hc.Parse()
-		if err != nil {
-			fmt.Println("error in get:", err)
-			os.Exit(2)
-		}
-		if !hc.IsPresent(args[0]) {
-			fmt.Printf("err: no command is found with this '%s' alias\n", args[0])
-			os.Exit(2)
-		}
-		command, err := hc.Get(args[0])
-		fmt.Println(command)
-		return err
-	},
+func runGet(cmd *cobra.Command, args []string) error {
+	err := validateGet(args)
+	if err != nil {
+		fmt.Println("validation error:", err)
+		os.Exit(2)
+	}
+	hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
+	defer hc.Close()
+
+	err = hc.Parse()
+	if err != nil {
+		fmt.Println("error in get:", err)
+		os.Exit(2)
+	}
+	if !hc.IsPresent(args[0]) {
+		fmt.Printf("err: no command is found with this '%s' alias\n", args[0])
+		os.Exit(2)
+	}
+	command, err := hc.Get(args[0])
+	fmt.Println(command)
+	return err
 }
 
 func init() {

@@ -10,7 +10,7 @@ import (
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "list is used to print all the alias and commands",
+	Short: "list prints all the alias and commands",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 		defer hc.Close()

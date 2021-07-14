@@ -40,6 +40,9 @@ func hailconfigPath(path string) (string, error) {
 	return "", nil
 }
 
+// Reset truncates and set Seek to 0, 0 so that data can be written over the
+// existing file from the top.
+// It returns error "failed to truncate" and "failed to seek in file."
 func (hc *hailconfigFile) Reset() error {
 	err := hc.Truncate(0)
 	if err != nil {

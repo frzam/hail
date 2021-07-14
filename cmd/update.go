@@ -13,7 +13,7 @@ const updateExample = `  # Update Command with 'delete-pods' alias
 
 var updateCmd = &cobra.Command{
 	Use:     "update [alias] [command]",
-	Short:   "It updates already present command.",
+	Short:   "updates already present command.",
 	Example: updateExample,
 	Args:    cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
