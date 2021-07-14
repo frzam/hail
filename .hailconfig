@@ -9,3 +9,5 @@ Title = "hailconfig"
     command = "oc whoami --show-server"
   [scripts.pods]
     command = "kubectl get pods -n apiconnect"
+  [scripts.server]
+    command = "oc whoami ---show-server"

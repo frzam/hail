@@ -49,6 +49,10 @@ func (hc *Hailconfig) Add(alias, command string) {
 	sc := script{
 		Command: command,
 	}
+	if hc.Scripts == nil {
+		hc.Scripts = make(map[string]script)
+	}
+
 	hc.Scripts[alias] = sc
 }
 
