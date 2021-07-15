@@ -55,3 +55,21 @@ func TestUpdateEmpty(t *testing.T) {
 		t.Errorf("should have been a nil map")
 	}
 }
+
+func TestIsPresent(t *testing.T) {
+	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
+	hc.Parse()
+
+	assertIsPresent(t, hc.IsPresent("kube-logs"), false)
+	for k, v := range scripts {
+		hc.Add(k, v)
+	}
+	assertIsPresent(t, hc.IsPresent("oc-login"), true)
+	assertIsPresent(t, hc.IsPresent("pv"), true)
+}
+
+func assertIsPresent(t *testing.T, got, want bool) {
+	if got != want {
+		t.Errorf("got: %t want: %t", got, want)
+	}
+}
