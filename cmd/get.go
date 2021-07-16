@@ -16,7 +16,7 @@ var getCmd = &cobra.Command{
 }
 
 func runGet(cmd *cobra.Command, args []string) error {
-	err := validateGet(args)
+	err := validateArgs(args)
 	if err != nil {
 		fmt.Println("validation error:", err)
 		os.Exit(2)
@@ -42,7 +42,7 @@ func init() {
 	rootCmd.AddCommand(getCmd)
 }
 
-func validateGet(args []string) error {
+func validateArgs(args []string) error {
 	if len(args) < 1 {
 		return errors.New("no alias is present")
 	}

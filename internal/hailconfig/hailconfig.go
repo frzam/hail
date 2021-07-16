@@ -8,6 +8,8 @@ import (
 	"github.com/pkg/errors"
 )
 
+var aliasNotFoundErr = errors.New("alias is not found")
+
 // script is each individual script. It has only one field Command.
 type script struct {
 	Command string `toml:"command"`
@@ -79,7 +81,7 @@ func (hc *Hailconfig) List() error {
 // If the alias is not present which is to be updated then returns error.
 func (hc *Hailconfig) Update(alias, command string) error {
 	if found := hc.IsPresent(alias); !found {
-		return errors.New("alias '" + alias + "' is not found")
+		return aliasNotFoundErr
 	}
 	hc.Add(alias, command)
 	return nil
@@ -89,6 +91,16 @@ func (hc *Hailconfig) Update(alias, command string) error {
 func (hc *Hailconfig) IsPresent(alias string) bool {
 	_, found := hc.Scripts[alias]
 	return found
+}
+
+// Delete removes a command basis the alias provided.
+// It returns alias not found error when alias is not present
+func (hc *Hailconfig) Delete(alias string) error {
+	if !hc.IsPresent(alias) {
+		return aliasNotFoundErr
+	}
+	delete(hc.Scripts, alias)
+	return nil
 }
 
 // Get returns command and error based on the alias name.
