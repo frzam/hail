@@ -23,6 +23,7 @@ var addCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		hc.Add(args[0], args[1])
+		fmt.Printf("command with alias '%s' has been added\n", args[0])
 		return hc.Save()
 	},
 }

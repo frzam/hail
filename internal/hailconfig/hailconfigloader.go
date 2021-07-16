@@ -58,7 +58,7 @@ func Init(title string) error {
 			return hc.Save()
 		}
 	}
-	return errors.New(".hailconfig is already present, cannot do init")
+	return errors.New(".hailconfig is already present, can't do init")
 }
 
 func hailconfigPath() (string, error) {

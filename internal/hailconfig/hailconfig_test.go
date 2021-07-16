@@ -73,3 +73,24 @@ func assertIsPresent(t *testing.T, got, want bool) {
 		t.Errorf("got: %t want: %t", got, want)
 	}
 }
+
+func TestDelete(t *testing.T) {
+	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
+	hc.Parse()
+	for k, v := range scripts {
+		hc.Add(k, v)
+	}
+	err := hc.Delete("pv")
+	if err != nil {
+		t.Errorf("recieved error: %v, but error should have been nil", err)
+	}
+	if hc.IsPresent("pv") {
+		t.Errorf("alias should not be present")
+	}
+	// aliasNotFoundErr
+	err = hc.Delete("k-logs")
+	if err == nil {
+		t.Errorf("should get aliasNotFoundErr")
+	}
+
+}

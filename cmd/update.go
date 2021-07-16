@@ -29,6 +29,7 @@ var updateCmd = &cobra.Command{
 			fmt.Println("error while update: ", err)
 			os.Exit(2)
 		}
+		fmt.Printf("command with alias '%s' has been updated\n", args[0])
 		return hc.Save()
 	},
 }

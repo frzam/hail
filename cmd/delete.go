@@ -32,7 +32,7 @@ var deleteCmd = &cobra.Command{
 			fmt.Println("error in delete:", err)
 			os.Exit(2)
 		}
-		fmt.Printf("command with alias %s has been deleted\n", args[0])
+		fmt.Printf("command with alias '%s' has been deleted\n", args[0])
 		return hc.Save()
 	},
 }
