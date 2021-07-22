@@ -10,8 +10,9 @@ import (
 )
 
 var copyCmd = &cobra.Command{
-	Use:   "copy [alias] [new-alias]",
-	Short: "It is used to copy one command/script to a new alias.",
+	Use:     "copy [alias] [new-alias]",
+	Short:   "It is used to copy one command/script to a new alias.",
+	Aliases: []string{"cp"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		err := validateCopy(args)
 		if err != nil {
@@ -26,11 +27,12 @@ var copyCmd = &cobra.Command{
 			fmt.Printf("error:%v\n", err)
 			os.Exit(2)
 		}
-		err = hc.Copy(args[0], args[1])
+		//err = hc.Copy(args[0], args[1])
 		if err != nil {
 			fmt.Println("error:%v\n", err)
 			os.Exit(2)
 		}
+		return nil
 	},
 }
 
