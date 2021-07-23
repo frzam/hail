@@ -92,5 +92,50 @@ func TestDelete(t *testing.T) {
 	if err == nil {
 		t.Errorf("should get aliasNotFoundErr")
 	}
+}
+func TestCopy(t *testing.T) {
+	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
+	hc.Parse()
+	for k, v := range scripts {
+		hc.Add(k, v)
+	}
+	oldAlias := "oc-login"
+	newAlias := "login"
 
+	// Basic Copy
+	err := hc.Copy(oldAlias, newAlias)
+	if err != nil {
+		t.Errorf("no error as expected but found err: %v\n", err)
+	}
+	got := hc.Scripts[newAlias].Command
+	want := hc.Scripts[oldAlias].Command
+	assertGotWant(t, got, want)
+
+	// When old alias is not present
+	oldAlias = "dlogin"
+	err = hc.Copy(oldAlias, newAlias)
+	if err == nil {
+		t.Errorf("expected error but no error is returned")
+	}
+	got = err.Error()
+	want = "old alias is not present."
+	assertGotWant(t, got, want)
+
+	// When new alias is already present
+	oldAlias = "pv"
+	newAlias = "oc-login"
+	err = hc.Copy(oldAlias, newAlias)
+	if err == nil {
+		t.Errorf("expected error but not error is returned")
+	}
+	got = err.Error()
+	want = "new alias is already present"
+	assertGotWant(t, got, want)
+}
+
+func assertGotWant(t *testing.T, got, want string) {
+	t.Helper()
+	if got != want {
+		t.Errorf("got %s while want %s\n", got, want)
+	}
 }

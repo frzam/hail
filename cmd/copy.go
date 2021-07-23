@@ -24,15 +24,16 @@ var copyCmd = &cobra.Command{
 
 		err = hc.Parse()
 		if err != nil {
-			fmt.Printf("error:%v\n", err)
+			fmt.Printf("error: %v\n", err)
 			os.Exit(2)
 		}
-		//err = hc.Copy(args[0], args[1])
+		err = hc.Copy(args[0], args[1])
 		if err != nil {
-			fmt.Println("error:%v\n", err)
+			fmt.Printf("error: %v\n", err)
 			os.Exit(2)
 		}
-		return nil
+		fmt.Printf("command with alias '%s' has been copied to alias '%s'\n", args[0], args[1])
+		return hc.Save()
 	},
 }
 
