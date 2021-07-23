@@ -114,6 +114,17 @@ func (hc *Hailconfig) Copy(oldAlias, newAlias string) error {
 	return nil
 }
 
+func (hc *Hailconfig) Move(oldAlias, newAlias string) error {
+	if !hc.IsPresent(oldAlias) {
+		return errors.New("old alias is not present")
+	}
+	if hc.IsPresent(newAlias) {
+		return errors.New("new alias is already present")
+	}
+	hc.Add(newAlias, hc.Scripts[oldAlias].Command)
+	return hc.Delete(oldAlias)
+}
+
 // Get returns command and error based on the alias name.
 // It checks for the alias in Scipts map. Before calling Get we should check if
 // the alias is present in map or not.

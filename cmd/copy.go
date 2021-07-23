@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"hail/internal/hailconfig"
 	"os"
@@ -10,11 +9,11 @@ import (
 )
 
 var copyCmd = &cobra.Command{
-	Use:     "copy [alias] [new-alias]",
+	Use:     "copy/cp [old-alias] [new-alias]",
 	Short:   "It is used to copy one command/script to a new alias.",
 	Aliases: []string{"cp"},
-	RunE: func(cmd *cobra.Command, args []string) error {
-		err := validateCopy(args)
+	Run: func(cmd *cobra.Command, args []string) {
+		err := validateCopyOrMove(args)
 		if err != nil {
 			fmt.Printf("error in validate copy: %v\n", err)
 			os.Exit(2)
@@ -32,14 +31,18 @@ var copyCmd = &cobra.Command{
 			fmt.Printf("error: %v\n", err)
 			os.Exit(2)
 		}
+		if err = hc.Save(); err != nil {
+			fmt.Printf("error in save : %v\n", err)
+			os.Exit(2)
+		}
 		fmt.Printf("command with alias '%s' has been copied to alias '%s'\n", args[0], args[1])
-		return hc.Save()
+
 	},
 }
 
-func validateCopy(args []string) error {
+func validateCopyOrMove(args []string) error {
 	if len(args) != 2 {
-		return errors.New(fmt.Sprintf("invalid number of arguments. expected 2, recieved %d", len(args)))
+		return fmt.Errorf("invalid number of arguments. expected 2, recieved %d", len(args))
 	}
 	return nil
 }
