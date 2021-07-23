@@ -105,7 +105,7 @@ func (hc *Hailconfig) Delete(alias string) error {
 
 func (hc *Hailconfig) Copy(oldAlias, newAlias string) error {
 	if !hc.IsPresent(oldAlias) {
-		return errors.New("old alias is not present.")
+		return errors.New("old alias is not present")
 	}
 	if hc.IsPresent(newAlias) {
 		return errors.New("new alias is already present")

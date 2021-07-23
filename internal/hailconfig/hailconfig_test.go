@@ -31,11 +31,9 @@ func assertAddError(t *testing.T, got, want, key string) {
 }
 
 func TestUpdate(t *testing.T) {
-	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
-	hc.Parse()
-	for k, v := range scripts {
-		hc.Add(k, v)
-	}
+
+	hc := newHailConfigDummy()
+
 	want := "kubectl logs -f --tail=100"
 	hc.Update("kube-logs", want)
 	got := hc.Scripts["kube-logs"].Command
@@ -75,11 +73,8 @@ func assertIsPresent(t *testing.T, got, want bool) {
 }
 
 func TestDelete(t *testing.T) {
-	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
-	hc.Parse()
-	for k, v := range scripts {
-		hc.Add(k, v)
-	}
+	hc := newHailConfigDummy()
+
 	err := hc.Delete("pv")
 	if err != nil {
 		t.Errorf("recieved error: %v, but error should have been nil", err)
@@ -94,11 +89,8 @@ func TestDelete(t *testing.T) {
 	}
 }
 func TestCopy(t *testing.T) {
-	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
-	hc.Parse()
-	for k, v := range scripts {
-		hc.Add(k, v)
-	}
+	hc := newHailConfigDummy()
+
 	oldAlias := "oc-login"
 	newAlias := "login"
 
@@ -118,7 +110,7 @@ func TestCopy(t *testing.T) {
 		t.Errorf("expected error but no error is returned")
 	}
 	got = err.Error()
-	want = "old alias is not present."
+	want = "old alias is not present"
 	assertGotWant(t, got, want)
 
 	// When new alias is already present
@@ -133,9 +125,63 @@ func TestCopy(t *testing.T) {
 	assertGotWant(t, got, want)
 }
 
+func TestMove(t *testing.T) {
+
+	hc := newHailConfigDummy()
+
+	// Basic Move
+	oldAlias := "pv"
+	newAlias := "pvc"
+	want, _ := hc.Get(oldAlias)
+	err := hc.Move(oldAlias, newAlias)
+	if err != nil {
+		t.Errorf("no error as expected but found err: %v\n", err)
+	}
+	got := hc.Scripts[newAlias].Command
+	assertGotWant(t, got, want)
+	if hc.IsPresent(oldAlias) {
+		t.Errorf("old alias is still present after move")
+	}
+	// When old alias is not present
+	oldAlias = "dlogin"
+	newAlias = "dlogin-new"
+	err = hc.Move(oldAlias, newAlias)
+	if err == nil {
+		t.Errorf("expected error but no error is returned")
+	}
+	got = err.Error()
+	want = "old alias is not present"
+	assertGotWant(t, got, want)
+
+	if hc.IsPresent(newAlias) {
+		t.Errorf("new alias is present")
+	}
+	// When new alias is alread present
+	oldAlias = "oc-login"
+	newAlias = "kube-logs"
+
+	err = hc.Move(oldAlias, newAlias)
+	if err == nil {
+		t.Errorf("expected error but no error is returned")
+	}
+	got = err.Error()
+	want = "new alias is already present"
+	assertGotWant(t, got, want)
+
+}
+
+func newHailConfigDummy() *Hailconfig {
+	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
+	hc.Parse()
+	for k, v := range scripts {
+		hc.Add(k, v)
+	}
+	return hc
+}
+
 func assertGotWant(t *testing.T, got, want string) {
 	t.Helper()
 	if got != want {
-		t.Errorf("got %s while want %s\n", got, want)
+		t.Errorf("got '%s' while want '%s'\n", got, want)
 	}
 }

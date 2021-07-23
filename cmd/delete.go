@@ -9,8 +9,9 @@ import (
 )
 
 var deleteCmd = &cobra.Command{
-	Use:   "delete [alias]",
-	Short: "delete removes command from hail basis alias",
+	Use:     "delete/rm [alias]",
+	Short:   "delete removes command from hail basis alias",
+	Aliases: []string{"rm"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		err := validateArgs(args)
 		if err != nil {
