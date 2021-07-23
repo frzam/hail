@@ -3,42 +3,46 @@ package cmd
 import (
 	"fmt"
 	"hail/internal/hailconfig"
-	"os"
 
 	"github.com/spf13/cobra"
 )
 
 var moveCmd = &cobra.Command{
-	Use:     "move/mv [old-alias] [new-alias]",
-	Short:   "It is used to move command with old alias to new alias.",
+	Use:     "move [old-alias] [new-alias]",
+	Short:   "move/mv used to move command with old alias to new alias.",
 	Aliases: []string{"mv"},
 	Run: func(cmd *cobra.Command, args []string) {
-		err := validateCopyOrMove(args)
-		if err != nil {
-			fmt.Printf("error in validate move: %v\n", err)
-			os.Exit(2)
+		oldAlias, err := cmd.Flags().GetString("oldAlias")
+		checkError("error in parsing flag", err)
+
+		newAlias, err := cmd.Flags().GetString("newAlias")
+		checkError("error in parsing flag", err)
+
+		if oldAlias == "" || newAlias == "" {
+			err = validateCopyOrMove(args)
+			checkError("error in validatioon", err)
+			oldAlias = args[0]
+			newAlias = args[1]
 		}
+
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 		defer hc.Close()
 
 		err = hc.Parse()
-		if err != nil {
-			fmt.Printf("error in parse: %v\n", err)
-			os.Exit(2)
-		}
-		err = hc.Move(args[0], args[1])
-		if err != nil {
-			fmt.Printf("error in move: %v\n", err)
-			os.Exit(2)
-		}
-		if err = hc.Save(); err != nil {
-			fmt.Printf("error in save: %v\n", err)
-			os.Exit(2)
-		}
-		fmt.Printf("command with alias '%s' has been moved to alias '%s'\n", args[0], args[1])
+		checkError("error in parse", err)
+
+		err = hc.Move(oldAlias, newAlias)
+		checkError("error in move", err)
+
+		err = hc.Save()
+		checkError("error in save", err)
+
+		fmt.Printf("command with alias '%s' has been moved to alias '%s'\n", oldAlias, newAlias)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(moveCmd)
+	moveCmd.Flags().StringP("oldAlias", "o", "", "old alias to be copied from")
+	moveCmd.Flags().StringP("newAlias", "n", "", "new alias to be copied to")
 }

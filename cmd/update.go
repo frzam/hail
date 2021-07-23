@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hail/internal/hailconfig"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -15,25 +16,41 @@ var updateCmd = &cobra.Command{
 	Use:     "update [alias] [command]",
 	Short:   "updates already present command.",
 	Example: updateExample,
-	Args:    cobra.ExactArgs(2),
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
+		alias, err := cmd.Flags().GetString("alias")
+		command := ""
+		if err != nil || (alias == "" && len(args) < 2) {
+			fmt.Println("error: no alias or command is present")
+			os.Exit(2)
+		}
+		if alias == "" && len(args) > 1 {
+			alias = args[0]
+			command = strings.Join(args[1:], "")
+		} else if alias != "" && len(args) > 0 {
+			command = strings.Join(args[0:], "")
+		} else {
+			fmt.Println("error: no alias or command is present")
+		}
+
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 		defer hc.Close()
-		err := hc.Parse()
-		if err != nil {
-			fmt.Println("error while parsing: ", err)
-			os.Exit(2)
-		}
-		err = hc.Update(args[0], args[1])
-		if err != nil {
-			fmt.Println("error while update: ", err)
-			os.Exit(2)
-		}
-		fmt.Printf("command with alias '%s' has been updated\n", args[0])
-		return hc.Save()
+
+		err = hc.Parse()
+		checkError("error in parse", err)
+
+		err = hc.Update(alias, command)
+		checkError("error in update", err)
+
+		err = hc.Save()
+		checkError("error in save", err)
+
+		fmt.Printf("command with alias '%s' has been updated\n", alias)
+
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(updateCmd)
+	updateCmd.Flags().StringP("alias", "a", "", "alias for the command")
+
 }

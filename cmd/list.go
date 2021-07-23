@@ -9,8 +9,8 @@ import (
 )
 
 var listCmd = &cobra.Command{
-	Use:     "list/ls",
-	Short:   "list prints all the alias and commands",
+	Use:     "list",
+	Short:   "list/ls prints all the alias and commands",
 	Aliases: []string{"ls"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
