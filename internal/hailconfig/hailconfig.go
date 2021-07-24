@@ -12,7 +12,8 @@ var aliasNotFoundErr = errors.New("alias is not found")
 
 // script is each individual script. It has only one field Command.
 type script struct {
-	Command string `toml:"command"`
+	Command     string `toml:"command"`
+	Description string `toml:"description"`
 }
 
 // Hailconfig contains three field loader, f of type ReadWriteResetCloser interface and config
