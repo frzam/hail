@@ -11,7 +11,7 @@ import (
 
 var getCmd = &cobra.Command{
 	Use:   "get [alias]",
-	Short: "get retrieves command basics the alias.",
+	Short: "get retrieves command basis the alias.",
 	RunE:  runGet,
 }
 
