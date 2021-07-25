@@ -11,10 +11,10 @@ import (
 var getCmd = &cobra.Command{
 	Use:   "get [alias]",
 	Short: "get retrieves command basis the alias.",
-	RunE:  runGet,
+	Run:   runGet,
 }
 
-func runGet(cmd *cobra.Command, args []string) error {
+func runGet(cmd *cobra.Command, args []string) {
 	err := validateArgs(args)
 	checkError("error in validation", err)
 
@@ -28,8 +28,8 @@ func runGet(cmd *cobra.Command, args []string) error {
 		checkError("alias is not present", fmt.Errorf("no command is found with '%s' alias", args[0]))
 	}
 	command, err := hc.Get(args[0])
+	checkError("error in get", err)
 	fmt.Println(command)
-	return err
 }
 
 func init() {

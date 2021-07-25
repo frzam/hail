@@ -11,7 +11,7 @@ var deleteCmd = &cobra.Command{
 	Use:     "delete [alias]",
 	Short:   "delete/rm removes command from hail basis alias",
 	Aliases: []string{"rm"},
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		alias, err := cmd.Flags().GetString("alias")
 		if err != nil || alias == "" {
 			checkError("error in flag parsing", err)
@@ -29,9 +29,10 @@ var deleteCmd = &cobra.Command{
 
 		err = hc.Delete(alias)
 		checkError("error in delete", err)
+		err = hc.Save()
+		checkError("error in save", err)
 
-		fmt.Printf("command with alias '%s' has been deleted\n", alias)
-		return hc.Save()
+		success(fmt.Sprintf("command with alias '%s' has been deleted\n", alias))
 	},
 }
 

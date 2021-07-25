@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"hail/internal/hailconfig"
 
 	"github.com/spf13/cobra"
@@ -17,8 +18,10 @@ var initCmd = &cobra.Command{
 			title = args[0]
 		}
 
-		err := hailconfig.Init(title)
+		cfgfile, err := hailconfig.Init(title)
 		checkError("error in init", err)
+		// TODO: Fix error msg
+		success(fmt.Sprintf("Initialized a file '%s'", cfgfile))
 	},
 }
 

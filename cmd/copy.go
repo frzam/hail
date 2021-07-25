@@ -37,7 +37,7 @@ var copyCmd = &cobra.Command{
 		err = hc.Save()
 		checkError("error in save", err)
 
-		fmt.Printf("command with alias '%s' has been copied to alias '%s'\n", oldAlias, newAlias)
+		success(fmt.Sprintf("command with alias '%s' has been copied to alias '%s'\n", oldAlias, newAlias))
 
 	},
 }

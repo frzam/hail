@@ -40,25 +40,25 @@ func (StandardHailConfigLoader) Load() ([]ReadWriteResetCloser, error) {
 	return []ReadWriteResetCloser{ReadWriteResetCloser(&hailconfigFile{f})}, nil
 }
 
-func Init(title string) error {
+func Init(title string) (string, error) {
 	cfgfile, err := hailconfigPath()
 	if err != nil {
-		return errors.Wrap(err, "cannot determine .hailconfig path")
+		return "", errors.Wrap(err, "cannot determine .hailconfig path")
 	}
 	_, err = os.Open(cfgfile)
 	if err != nil {
 		if os.IsNotExist(err) {
 			f, err := os.OpenFile(cfgfile, os.O_CREATE, 0755)
 			if err != nil {
-				return err
+				return "", err
 			}
 			hc := new(Hailconfig).WithLoader(DefaultLoader)
 			hc.config.Title = title
 			hc.f = &hailconfigFile{f}
-			return hc.Save()
+			return "", hc.Save()
 		}
 	}
-	return errors.New(".hailconfig is already present, can't do init")
+	return cfgfile, nil
 }
 
 func hailconfigPath() (string, error) {

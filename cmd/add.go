@@ -43,7 +43,6 @@ var addCmd = &cobra.Command{
 		checkError("error in save", err)
 
 		success(fmt.Sprintf("command with alias '%s' has been added\n", alias))
-
 	},
 }
 
