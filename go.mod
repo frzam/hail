@@ -8,4 +8,5 @@ require (
 	github.com/jedib0t/go-pretty/v6 v6.2.4 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.2.1
+	golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b // indirect
 )
