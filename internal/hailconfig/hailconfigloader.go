@@ -1,6 +1,7 @@
 package hailconfig
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -45,20 +46,18 @@ func Init(title string) (string, error) {
 	if err != nil {
 		return "", errors.Wrap(err, "cannot determine .hailconfig path")
 	}
-	_, err = os.Open(cfgfile)
-	if err != nil {
-		if os.IsNotExist(err) {
-			f, err := os.OpenFile(cfgfile, os.O_CREATE, 0755)
-			if err != nil {
-				return "", err
-			}
-			hc := new(Hailconfig).WithLoader(DefaultLoader)
-			hc.config.Title = title
-			hc.f = &hailconfigFile{f}
-			return "", hc.Save()
+	if _, err = os.Stat(cfgfile); os.IsNotExist(err) {
+		f, err := os.OpenFile(cfgfile, os.O_CREATE, 0755)
+		if err != nil {
+			return "", err
 		}
+		hc := new(Hailconfig).WithLoader(DefaultLoader)
+		hc.config.Title = title
+		hc.f = &hailconfigFile{f}
+		return cfgfile, hc.Save()
+	} else {
+		return "", fmt.Errorf(".hailconfig is already present, can't do init at loc: %s", cfgfile)
 	}
-	return cfgfile, nil
 }
 
 func hailconfigPath() (string, error) {

@@ -20,7 +20,6 @@ var initCmd = &cobra.Command{
 
 		cfgfile, err := hailconfig.Init(title)
 		checkError("error in init", err)
-		// TODO: Fix error msg
 		success(fmt.Sprintf("Initialized a file '%s'", cfgfile))
 	},
 }
