@@ -100,10 +100,10 @@ func (e Editor) Launch(path string) error {
 	cmd := exec.Command(args[0], args[1:]...)
 	fmt.Println("args: ", args)
 	fmt.Fprintf(os.Stdout, "Opening file with editor %v\n", args)
-	err = cmd.Run()
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
+	err = cmd.Run()
 	return err
 }
 func (e Editor) args(path string) []string {
