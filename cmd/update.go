@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"hail/internal/hailconfig"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -21,8 +20,7 @@ var updateCmd = &cobra.Command{
 		des, _ := cmd.Flags().GetString("description")
 		command := ""
 		if err != nil || (alias == "" && len(args) < 2) {
-			fmt.Println("error: no alias or command is present")
-			os.Exit(2)
+			checkError("error in validation", fmt.Errorf("no alias or command is present"))
 		}
 		if alias == "" && len(args) > 1 {
 			alias = args[0]
@@ -30,8 +28,7 @@ var updateCmd = &cobra.Command{
 		} else if alias != "" && len(args) > 0 {
 			command = strings.Join(args[0:], "")
 		} else {
-			fmt.Println("error: no alias or command is present")
-			os.Exit(2)
+			checkError("error in validation", fmt.Errorf("no alias or command is present"))
 		}
 
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
@@ -46,8 +43,7 @@ var updateCmd = &cobra.Command{
 		err = hc.Save()
 		checkError("error in save", err)
 
-		fmt.Printf("command with alias '%s' has been updated\n", alias)
-
+		success(fmt.Sprintf("command with alias '%s' has been updated\n", alias))
 	},
 }
 

@@ -15,6 +15,7 @@ var deleteCmd = &cobra.Command{
 		alias, err := cmd.Flags().GetString("alias")
 		if err != nil || alias == "" {
 			checkError("error in flag parsing", err)
+
 			err = validateArgs(args)
 			checkError("error in validation", err)
 			alias = args[0]

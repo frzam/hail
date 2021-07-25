@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"hail/internal/hailconfig"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -17,21 +16,16 @@ var getCmd = &cobra.Command{
 
 func runGet(cmd *cobra.Command, args []string) error {
 	err := validateArgs(args)
-	if err != nil {
-		fmt.Println("validation error:", err)
-		os.Exit(2)
-	}
+	checkError("error in validation", err)
+
 	hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 	defer hc.Close()
 
 	err = hc.Parse()
-	if err != nil {
-		fmt.Println("error in get:", err)
-		os.Exit(2)
-	}
+	checkError("error in parsing", err)
+
 	if !hc.IsPresent(args[0]) {
-		fmt.Printf("err: no command is found with this '%s' alias\n", args[0])
-		os.Exit(2)
+		checkError("alias is not present", fmt.Errorf("no command is found with '%s' alias", args[0]))
 	}
 	command, err := hc.Get(args[0])
 	fmt.Println(command)

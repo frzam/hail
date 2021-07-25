@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"hail/internal/hailconfig"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +20,7 @@ var copyCmd = &cobra.Command{
 
 		if oldAlias == "" || newAlias == "" {
 			err = validateCopyOrMove(args)
-			checkError("error in validatioon", err)
+			checkError("error in validation", err)
 			oldAlias = args[0]
 			newAlias = args[1]
 		}
@@ -30,10 +29,8 @@ var copyCmd = &cobra.Command{
 		defer hc.Close()
 
 		err = hc.Parse()
-		if err != nil {
-			fmt.Printf("error: %v\n", err)
-			os.Exit(2)
-		}
+		checkError("error in parsing", err)
+
 		err = hc.Copy(oldAlias, newAlias)
 		checkError("error in copy", err)
 

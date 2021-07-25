@@ -20,7 +20,7 @@ var moveCmd = &cobra.Command{
 
 		if oldAlias == "" || newAlias == "" {
 			err = validateCopyOrMove(args)
-			checkError("error in validatioon", err)
+			checkError("error in validation", err)
 			oldAlias = args[0]
 			newAlias = args[1]
 		}

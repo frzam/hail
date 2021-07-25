@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"fmt"
 	"hail/internal/hailconfig"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -12,16 +10,15 @@ var listCmd = &cobra.Command{
 	Use:     "list",
 	Short:   "list/ls prints all the alias and commands",
 	Aliases: []string{"ls"},
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 		defer hc.Close()
 
 		err := hc.Parse()
-		if err != nil {
-			fmt.Println("error in list: ", err)
-			os.Exit(2)
-		}
-		return hc.List()
+		checkError("error in parsing", err)
+
+		err = hc.List()
+		checkError("error in list", err)
 	},
 }
 

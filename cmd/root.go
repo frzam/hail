@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
@@ -27,8 +28,13 @@ func Execute() {
 
 func checkError(msg string, err error) {
 	if err != nil {
-		fmt.Printf("%s:%v\n", msg, err)
+		red := color.New(color.FgRed, color.Bold).SprintFunc()
+		fmt.Printf("%s: %s: %v\n", red("Error"), msg, err)
 		os.Exit(2)
-
 	}
+}
+
+func success(msg string) {
+	green := color.New(color.FgGreen, color.Bold).SprintFunc()
+	fmt.Printf("%s: %s\n", green("Success"), msg)
 }

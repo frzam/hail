@@ -9,7 +9,7 @@ import (
 var initCmd = &cobra.Command{
 	Use:   "init [title]",
 	Short: "init initializes an empty .hailconfig file with title as provided",
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		title := ""
 		if len(args) < 1 {
 			title = "default"
@@ -17,7 +17,8 @@ var initCmd = &cobra.Command{
 			title = args[0]
 		}
 
-		return hailconfig.Init(title)
+		err := hailconfig.Init(title)
+		checkError("error in init", err)
 	},
 }
 

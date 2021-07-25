@@ -15,6 +15,7 @@ var versionCmd = &cobra.Command{
 	Short: "version prints the current version of hail",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		// TODO: Print version basis the latest release.
 		fmt.Println(version)
 	},
 }
