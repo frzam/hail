@@ -21,6 +21,7 @@ var addCmd = &cobra.Command{
 			fmt.Println("error: no alias or command is present")
 			os.Exit(2)
 		}
+		des, _ := cmd.Flags().GetString("description")
 		if alias == "" && len(args) > 1 {
 			alias = args[0]
 			command = strings.Join(args[1:], "")
@@ -39,7 +40,7 @@ var addCmd = &cobra.Command{
 			fmt.Println("alias already present")
 			os.Exit(2)
 		}
-		hc.Add(alias, command)
+		hc.Add(alias, command, des)
 		err = hc.Save()
 		checkError("error in save", err)
 		fmt.Printf("command with alias '%s' has been added\n", alias)
@@ -50,4 +51,5 @@ var addCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringP("alias", "a", "", "alias for the command")
+	addCmd.Flags().StringP("description", "d", "", "describe the command")
 }

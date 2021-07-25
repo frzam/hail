@@ -1,10 +1,10 @@
 package hailconfig
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/BurntSushi/toml"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/pkg/errors"
 )
 
@@ -48,10 +48,20 @@ func (hc *Hailconfig) Close() error {
 // Add is used to add a new script to Scripts map.
 // It takes alias and command as input and creates a type of script and adds
 // to hc.Scripts map.
-func (hc *Hailconfig) Add(alias, command string) {
-	sc := script{
-		Command: command,
+func (hc *Hailconfig) Add(alias, command, des string) {
+
+	var sc script
+	if des != "" {
+		sc = script{
+			Command:     command,
+			Description: des,
+		}
+	} else {
+		sc = script{
+			Command: command,
+		}
 	}
+
 	if hc.Scripts == nil {
 		hc.Scripts = make(map[string]script)
 	}
@@ -72,19 +82,24 @@ func (hc *Hailconfig) Save() error {
 
 // List is used to print all the aliases and commands in Scripts map.
 func (hc *Hailconfig) List() error {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"Alias", "Command", "Description"})
+	t.AppendSeparator()
 	for alias, script := range hc.Scripts {
-		fmt.Fprintf(os.Stdout, "%s\t\t%s\n", alias, script.Command)
+		t.AppendRow([]interface{}{alias, script.Command, script.Description})
 	}
+	t.Render()
 	return nil
 }
 
 // Update is used to update a command for already present alias.
 // If the alias is not present which is to be updated then returns error.
-func (hc *Hailconfig) Update(alias, command string) error {
+func (hc *Hailconfig) Update(alias, command, des string) error {
 	if found := hc.IsPresent(alias); !found {
 		return aliasNotFoundErr
 	}
-	hc.Add(alias, command)
+	hc.Add(alias, command, des)
 	return nil
 }
 
@@ -111,7 +126,7 @@ func (hc *Hailconfig) Copy(oldAlias, newAlias string) error {
 	if hc.IsPresent(newAlias) {
 		return errors.New("new alias is already present")
 	}
-	hc.Add(newAlias, hc.Scripts[oldAlias].Command)
+	hc.Add(newAlias, hc.Scripts[oldAlias].Command, hc.Scripts[oldAlias].Description)
 	return nil
 }
 
@@ -122,7 +137,7 @@ func (hc *Hailconfig) Move(oldAlias, newAlias string) error {
 	if hc.IsPresent(newAlias) {
 		return errors.New("new alias is already present")
 	}
-	hc.Add(newAlias, hc.Scripts[oldAlias].Command)
+	hc.Add(newAlias, hc.Scripts[oldAlias].Command, hc.Scripts[oldAlias].Description)
 	return hc.Delete(oldAlias)
 }
 

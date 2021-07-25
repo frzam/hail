@@ -18,6 +18,7 @@ var updateCmd = &cobra.Command{
 	Example: updateExample,
 	Run: func(cmd *cobra.Command, args []string) {
 		alias, err := cmd.Flags().GetString("alias")
+		des, _ := cmd.Flags().GetString("description")
 		command := ""
 		if err != nil || (alias == "" && len(args) < 2) {
 			fmt.Println("error: no alias or command is present")
@@ -30,6 +31,7 @@ var updateCmd = &cobra.Command{
 			command = strings.Join(args[0:], "")
 		} else {
 			fmt.Println("error: no alias or command is present")
+			os.Exit(2)
 		}
 
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
@@ -38,7 +40,7 @@ var updateCmd = &cobra.Command{
 		err = hc.Parse()
 		checkError("error in parse", err)
 
-		err = hc.Update(alias, command)
+		err = hc.Update(alias, command, des)
 		checkError("error in update", err)
 
 		err = hc.Save()
@@ -52,5 +54,5 @@ var updateCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(updateCmd)
 	updateCmd.Flags().StringP("alias", "a", "", "alias for the command")
-
+	updateCmd.Flags().StringP("description", "d", "", "descrition of the command")
 }
