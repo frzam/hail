@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"hail/internal/hailconfig"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -15,6 +16,11 @@ var getCmd = &cobra.Command{
 }
 
 func runGet(cmd *cobra.Command, args []string) {
+	command := get(cmd, args)
+	fmt.Fprintln(os.Stdout, command)
+}
+
+func get(cmd *cobra.Command, args []string) string {
 	err := validateArgs(args)
 	checkError("error in validation", err)
 
@@ -29,7 +35,7 @@ func runGet(cmd *cobra.Command, args []string) {
 	}
 	command, err := hc.Get(args[0])
 	checkError("error in get", err)
-	fmt.Println(command)
+	return command
 }
 
 func init() {

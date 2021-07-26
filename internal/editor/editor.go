@@ -70,21 +70,11 @@ func defaultEnvShell() []string {
 }
 
 func (e Editor) LaunchTempFile(prefix string, edit bool, r io.Reader) ([]byte, string, error) {
-
-	f, err := os.CreateTemp("", prefix+"*")
+	path, err := CreateTempFile(prefix, edit, r)
 	if err != nil {
-		return nil, "", err
+		return nil, path, err
 	}
-	defer f.Close()
-	path := f.Name()
-	if edit {
-		if _, err := io.Copy(f, r); err != nil {
-			os.Remove(path)
-			return nil, path, err
-		}
-	}
-	// This file descriptor needs to close so the next process (Launch) can claim it.
-	f.Close()
+
 	if err = e.Launch(path); err != nil {
 		return nil, path, err
 	}
@@ -94,6 +84,26 @@ func (e Editor) LaunchTempFile(prefix string, edit bool, r io.Reader) ([]byte, s
 	}
 	err = os.Remove(path)
 	return bytes, path, err
+}
+
+func CreateTempFile(prefix string, edit bool, r io.Reader) (string, error) {
+
+	f, err := os.CreateTemp("", prefix+"*")
+	f.Chmod(0777)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+	path := f.Name()
+	if edit {
+		if _, err := io.Copy(f, r); err != nil {
+			os.Remove(path)
+			return "", err
+		}
+	}
+	// This file descriptor needs to close so the next process (Launch) can claim it.
+	f.Close()
+	return path, err
 }
 
 func (e Editor) Launch(path string) error {
@@ -132,11 +142,16 @@ func platformize(linux, windows string) string {
 	return linux
 }
 
-func (e Editor) RunScript() {
-	filename := "testdata/hello-python.py"
+func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 
 	f, _ := os.Open(filename)
 	defer f.Close()
+
+	_, err := io.Copy(f, strings.NewReader(command))
+	if err != nil {
+		fmt.Println("error in copy", err)
+
+	}
 	scanner := bufio.NewScanner(f)
 	var shebangList []string
 	for scanner.Scan() {
@@ -153,18 +168,22 @@ func (e Editor) RunScript() {
 		s := strings.Split(shebangList[0], "/")
 		interpreter = s[len(s)-1]
 	}
+	if interpreter == "" {
+		interpreter = "bash"
+	}
 	fmt.Println("interpreter: ", interpreter)
-	err := os.Chmod(filename, 0500)
+
+	err = os.Chmod(filename, 0500)
 	if err != nil {
 		fmt.Println("error: ", err)
 		os.Exit(2)
 	}
 	path, err := exec.LookPath(interpreter)
-	fmt.Println("path: ", path)
-	cmd, err := exec.Command(path, filename).Output()
 	if err != nil {
-		fmt.Println("error: ", err)
-		os.Exit(2)
+
 	}
-	fmt.Println("output: ", string(cmd))
+	fmt.Println("path: ", path)
+	fmt.Println("command: ", command)
+	cmd, err := exec.Command(path, "echo ").Output()
+	return cmd, err
 }
