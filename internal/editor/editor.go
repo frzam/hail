@@ -1,6 +1,7 @@
 package editor
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -129,4 +130,29 @@ func platformize(linux, windows string) string {
 		return windows
 	}
 	return linux
+}
+
+func (e Editor) RunScript() {
+	filename := "testdata/hello-python.py"
+
+	f, _ := os.Open(filename)
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+		if strings.HasPrefix(scanner.Text(), "#!") {
+			fmt.Println("shebang!")
+		}
+	}
+	err := os.Chmod(filename, 0500)
+	if err != nil {
+		fmt.Println("error: ", err)
+		os.Exit(2)
+	}
+	cmd, err := exec.Command("python", filename).Output()
+	if err != nil {
+		fmt.Println("error: ", err)
+		os.Exit(2)
+	}
+	fmt.Println("output: ", string(cmd))
 }
