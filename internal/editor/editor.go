@@ -138,18 +138,30 @@ func (e Editor) RunScript() {
 	f, _ := os.Open(filename)
 	defer f.Close()
 	scanner := bufio.NewScanner(f)
+	var shebangList []string
 	for scanner.Scan() {
 		fmt.Println(scanner.Text())
 		if strings.HasPrefix(scanner.Text(), "#!") {
-			fmt.Println("shebang!")
+			shebangList = strings.Split(scanner.Text(), " ")
+			break
 		}
 	}
+	var interpreter string
+	if len(shebangList) > 1 {
+		interpreter = shebangList[1]
+	} else if len(shebangList) == 1 {
+		s := strings.Split(shebangList[0], "/")
+		interpreter = s[len(s)-1]
+	}
+	fmt.Println("interpreter: ", interpreter)
 	err := os.Chmod(filename, 0500)
 	if err != nil {
 		fmt.Println("error: ", err)
 		os.Exit(2)
 	}
-	cmd, err := exec.Command("python", filename).Output()
+	path, err := exec.LookPath(interpreter)
+	fmt.Println("path: ", path)
+	cmd, err := exec.Command(path, filename).Output()
 	if err != nil {
 		fmt.Println("error: ", err)
 		os.Exit(2)
