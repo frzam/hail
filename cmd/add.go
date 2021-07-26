@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hail/internal/editor"
 	"hail/internal/hailconfig"
+	"os"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -64,6 +65,16 @@ func getAlias(cmd *cobra.Command, args []string) (string, error) {
 
 func getCommand(cmd *cobra.Command, args []string) (string, error) {
 	command := ""
+	// Read command from a file.
+	f, _ := cmd.Flags().GetString("file")
+	if f != "" {
+		bCommand, err := os.ReadFile(f)
+		if err != nil {
+			return "", errors.Wrap(err, "error while reading file")
+		}
+		return string(bCommand), nil
+	}
+	// Read file from args.
 	alias, _ := cmd.Flags().GetString("alias")
 	if len(args) == 1 && alias == "" || len(args) == 0 && alias != "" {
 		e := editor.NewDefaultEditor([]string{})
@@ -85,4 +96,5 @@ func init() {
 	rootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringP("alias", "a", "", "alias for the command")
 	addCmd.Flags().StringP("description", "d", "", "describe the command")
+	addCmd.Flags().StringP("file", "f", "", "path of the file that needs to be read as command")
 }
