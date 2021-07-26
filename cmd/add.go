@@ -78,7 +78,7 @@ func getCommand(cmd *cobra.Command, args []string) (string, error) {
 	alias, _ := cmd.Flags().GetString("alias")
 	if len(args) == 1 && alias == "" || len(args) == 0 && alias != "" {
 		e := editor.NewDefaultEditor([]string{})
-		bCommand, _, err := e.LaunchTempFile("hail")
+		bCommand, _, err := e.LaunchTempFile("hail", false, os.Stdout)
 		checkError("error in launching temp file", err)
 		command = string(bCommand)
 	} else if alias != "" && len(args) > 0 {
@@ -95,6 +95,6 @@ func getCommand(cmd *cobra.Command, args []string) (string, error) {
 func init() {
 	rootCmd.AddCommand(addCmd)
 	addCmd.Flags().StringP("alias", "a", "", "alias for the command")
-	addCmd.Flags().StringP("description", "d", "", "describe the command")
+	addCmd.Flags().StringP("description", "d", "", "description of the command")
 	addCmd.Flags().StringP("file", "f", "", "path of the file that needs to be read as command")
 }

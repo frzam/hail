@@ -2,6 +2,7 @@ package editor
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -67,7 +68,7 @@ func defaultEnvShell() []string {
 	return []string{shell, flag}
 }
 
-func (e Editor) LaunchTempFile(prefix string) ([]byte, string, error) {
+func (e Editor) LaunchTempFile(prefix string, edit bool, r io.Reader) ([]byte, string, error) {
 
 	f, err := os.CreateTemp("", prefix+"*")
 	if err != nil {
@@ -75,6 +76,12 @@ func (e Editor) LaunchTempFile(prefix string) ([]byte, string, error) {
 	}
 	defer f.Close()
 	path := f.Name()
+	if edit {
+		if _, err := io.Copy(f, r); err != nil {
+			os.Remove(path)
+			return nil, path, err
+		}
+	}
 	// This file descriptor needs to close so the next process (Launch) can claim it.
 	f.Close()
 	if err = e.Launch(path); err != nil {
@@ -98,7 +105,6 @@ func (e Editor) Launch(path string) error {
 	}
 	args := e.args(abs)
 	cmd := exec.Command(args[0], args[1:]...)
-	fmt.Println("args: ", args)
 	fmt.Fprintf(os.Stdout, "Opening file with editor %v\n", args)
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
