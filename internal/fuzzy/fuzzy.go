@@ -37,6 +37,9 @@ func (ig IterativeGet) FindAlias() (string, error) {
 			return fmt.Sprintln(ig.FuzzyScripts[i].command)
 		}))
 	if err != nil {
+		if err.Error() == "abort" {
+			return "", fmt.Errorf("no alias is found")
+		}
 		return "", errors.Wrap(err, "error while iterative get")
 	}
 	return ig.FuzzyScripts[igx].alias, nil

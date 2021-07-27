@@ -21,19 +21,28 @@ func runGet(cmd *cobra.Command, args []string) {
 }
 
 func get(cmd *cobra.Command, args []string) string {
-	err := validateArgs(args)
-	checkError("error in validation", err)
+	alias := ""
 
 	hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 	defer hc.Close()
 
-	err = hc.Parse()
-	checkError("error in parsing", err)
+	err := hc.Parse()
 
-	if !hc.IsPresent(args[0]) {
-		checkError("alias is not present", fmt.Errorf("no command is found with '%s' alias", args[0]))
+	checkError("error in parsing", err)
+	if len(args) == 0 {
+		alias, err = findFuzzyAlias(hc)
+		checkError("error while finding alias", err)
 	}
-	command, err := hc.Get(args[0])
+	if alias == "" {
+		err = validateArgs(args)
+		checkError("error in validation", err)
+		alias = args[0]
+	}
+
+	if !hc.IsPresent(alias) {
+		checkError("alias is not present", fmt.Errorf("no command is found with '%s' alias", alias))
+	}
+	command, err := hc.Get(alias)
 	checkError("error in get", err)
 	return command
 }

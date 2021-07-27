@@ -23,10 +23,7 @@ func run(cmd *cobra.Command, args []string) {
 	err := hc.Parse()
 	checkError("error in parsing", err)
 
-	ig := fuzzy.NewIterativeGet(hc)
-
-	alias, err := ig.FindAlias()
-
+	alias, err := findFuzzyAlias(hc)
 	checkError("error while finding alias", err)
 	if alias == "" || !hc.IsPresent(alias) {
 		checkError("alias is not present", fmt.Errorf("no command is found with '%s' alias", alias))
@@ -35,6 +32,12 @@ func run(cmd *cobra.Command, args []string) {
 	command, err := hc.Get(alias)
 	checkError("error in get", err)
 	fmt.Fprintln(os.Stdout, command)
+}
+
+func findFuzzyAlias(hc *hailconfig.Hailconfig) (string, error) {
+	ig := fuzzy.NewIterativeGet(hc)
+
+	return ig.FindAlias()
 }
 
 func Execute() {
