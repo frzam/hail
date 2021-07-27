@@ -85,11 +85,11 @@ func (hc *Hailconfig) List() error {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.AppendHeader(table.Row{"Alias", "Command", "Description"})
-	t.AppendSeparator()
 	// TODO: Show only first line
 	t.SetColumnConfigs([]table.ColumnConfig{{}})
 	for alias, script := range hc.Scripts {
 		t.AppendRow([]interface{}{alias, script.Command, script.Description})
+		t.AppendSeparator()
 	}
 	t.Render()
 	return nil
