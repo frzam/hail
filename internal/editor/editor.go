@@ -143,7 +143,7 @@ func platformize(linux, windows string) string {
 
 func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 
-	f, _ := os.Open(filename)
+	f, _ := os.OpenFile(filename, os.O_RDWR, 0)
 	defer f.Close()
 
 	_, err := io.Copy(f, strings.NewReader(command))
@@ -167,22 +167,14 @@ func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 		s := strings.Split(shebangList[0], "/")
 		interpreter = s[len(s)-1]
 	}
-	if interpreter == "" {
-		interpreter = "bash"
-	}
 	fmt.Println("interpreter: ", interpreter)
 
-	err = os.Chmod(filename, 0500)
-	if err != nil {
-		fmt.Println("error: ", err)
-		os.Exit(2)
-	}
 	path, err := exec.LookPath(interpreter)
 	if err != nil {
-
+		// return nil, nil //fmt.Errorf("interpreter %s not found", interpreter)
 	}
 	fmt.Println("path: ", path)
 	fmt.Println("command: ", command)
-	cmd, err := exec.Command(path, "echo ").Output()
+	cmd, err := exec.Command(path, command).Output()
 	return cmd, err
 }

@@ -36,9 +36,7 @@ func run(cmd *cobra.Command, args []string) {
 }
 
 func findFuzzyAlias(hc *hailconfig.Hailconfig) (string, error) {
-	ig := fuzzy.NewIterativeGet(hc)
-
-	return ig.FindAlias()
+	return fuzzy.NewIterativeGet(hc).FindAlias()
 }
 
 func Execute() {
@@ -67,5 +65,5 @@ func checkError(msg string, err error) {
 
 func success(msg string) {
 	green := color.New(color.FgGreen, color.Bold).SprintFunc()
-	fmt.Printf("%s: %s\n", green("Success"), msg)
+	fmt.Printf("%s: %s", green("Success"), msg)
 }

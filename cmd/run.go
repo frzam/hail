@@ -13,7 +13,6 @@ var runCmd = &cobra.Command{
 	Short: "it is used to directly run a command from alias",
 	Run: func(cmd *cobra.Command, args []string) {
 		path, err := editor.CreateTempFile("hail", false, os.Stdout)
-		fmt.Println("path: ", path)
 		checkError("error while creating temp file", err)
 
 		command := get(cmd, args)
