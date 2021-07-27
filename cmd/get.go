@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"hail/internal/hailconfig"
 	"os"
@@ -21,22 +20,30 @@ func runGet(cmd *cobra.Command, args []string) {
 }
 
 func get(cmd *cobra.Command, args []string) string {
-	alias := ""
 
 	hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 	defer hc.Close()
 
 	err := hc.Parse()
-
 	checkError("error in parsing", err)
+
+	alias := ""
 	if len(args) == 0 {
 		alias, err = findFuzzyAlias(hc)
 		checkError("error while finding alias", err)
 	}
 	if alias == "" {
-		err = validateArgs(args)
-		checkError("error in validation", err)
-		alias = args[0]
+
+		if len(args) == 0 {
+			alias, err = findFuzzyAlias(hc)
+			checkError("error while finding alias", err)
+		}
+		if alias == "" {
+			err = validateArgs(args)
+			checkError("error in validation", err)
+			alias = args[0]
+		}
+
 	}
 
 	if !hc.IsPresent(alias) {
@@ -49,14 +56,4 @@ func get(cmd *cobra.Command, args []string) string {
 
 func init() {
 	rootCmd.AddCommand(getCmd)
-}
-
-func validateArgs(args []string) error {
-	if len(args) < 1 {
-		return errors.New("no alias is present")
-	}
-	if len(args) > 1 {
-		return errors.New("more than one alias is present")
-	}
-	return nil
 }

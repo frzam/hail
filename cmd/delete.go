@@ -12,20 +12,27 @@ var deleteCmd = &cobra.Command{
 	Short:   "delete/rm removes command from hail basis alias",
 	Aliases: []string{"rm"},
 	Run: func(cmd *cobra.Command, args []string) {
-		alias, err := cmd.Flags().GetString("alias")
-		if err != nil || alias == "" {
-			checkError("error in flag parsing", err)
-
-			err = validateArgs(args)
-			checkError("error in validation", err)
-			alias = args[0]
-		}
-
 		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
 		defer hc.Close()
 
-		err = hc.Parse()
-		checkError("error in delete", err)
+		err := hc.Parse()
+		checkError("error in parse", err)
+
+		alias := ""
+		if len(args) == 0 {
+			alias, err = findFuzzyAlias(hc)
+			checkError("error while finding alias", err)
+		}
+		if alias == "" {
+			alias, err = cmd.Flags().GetString("alias")
+			if err != nil || alias == "" {
+				checkError("error in flag parsing", err)
+
+				err = validateArgs(args)
+				checkError("error in validation", err)
+				alias = args[0]
+			}
+		}
 
 		err = hc.Delete(alias)
 		checkError("error in delete", err)

@@ -19,9 +19,16 @@ var editCmd = &cobra.Command{
 		err := hc.Parse()
 		checkError("error in parsing", err)
 
-		// Get alias from flag or from args
-		alias, err := getAlias(cmd, args)
-		checkError("error in validation", err)
+		alias := ""
+		if len(args) == 0 {
+			alias, err = findFuzzyAlias(hc)
+			checkError("error while finding alias", err)
+		}
+		if alias == "" {
+			// Get alias from flag or from args
+			alias, err = getAlias(cmd, args)
+			checkError("error in validation", err)
+		}
 
 		// Get description
 		des, _ := cmd.Flags().GetString("description")

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"hail/internal/fuzzy"
 	"hail/internal/hailconfig"
@@ -45,6 +46,15 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+func validateArgs(args []string) error {
+	if len(args) < 1 {
+		return errors.New("no alias is present")
+	}
+	if len(args) > 1 {
+		return errors.New("more than one alias is present")
+	}
+	return nil
 }
 
 func checkError(msg string, err error) {
