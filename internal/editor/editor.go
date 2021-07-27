@@ -89,7 +89,6 @@ func (e Editor) LaunchTempFile(prefix string, edit bool, r io.Reader) ([]byte, s
 func CreateTempFile(prefix string, edit bool, r io.Reader) (string, error) {
 
 	f, err := os.CreateTemp("", prefix+"*")
-	f.Chmod(0777)
 	if err != nil {
 		return "", err
 	}

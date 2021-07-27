@@ -11,7 +11,7 @@ import (
 var aliasNotFoundErr = errors.New("alias is not found")
 
 // script is each individual script. It has only one field Command.
-type script struct {
+type Script struct {
 	Command     string `toml:"command"`
 	Description string `toml:"description"`
 }
@@ -28,7 +28,7 @@ type Hailconfig struct {
 // map Scripts.
 type config struct {
 	Title   string
-	Scripts map[string]script `toml:"scripts"`
+	Scripts map[string]Script `toml:"scripts"`
 }
 
 func (hc *Hailconfig) WithLoader(l Loader) *Hailconfig {
@@ -50,20 +50,20 @@ func (hc *Hailconfig) Close() error {
 // to hc.Scripts map.
 func (hc *Hailconfig) Add(alias, command, des string) {
 
-	var sc script
+	var sc Script
 	if des != "" {
-		sc = script{
+		sc = Script{
 			Command:     command,
 			Description: des,
 		}
 	} else {
-		sc = script{
+		sc = Script{
 			Command: command,
 		}
 	}
 
 	if hc.Scripts == nil {
-		hc.Scripts = make(map[string]script)
+		hc.Scripts = make(map[string]Script)
 	}
 
 	hc.Scripts[alias] = sc
