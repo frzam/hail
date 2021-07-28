@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"hail/cmd/cmdutil"
 	"hail/internal/hailconfig"
 
 	"github.com/spf13/cobra"
@@ -16,34 +17,34 @@ var deleteCmd = &cobra.Command{
 		defer hc.Close()
 
 		err := hc.Parse()
-		checkError("error in parse", err)
+		cmdutil.CheckErr("error in parse", err)
 
 		alias := ""
 		if len(args) == 0 {
-			alias, err = findFuzzyAlias(hc)
-			checkError("error while finding alias", err)
+			alias, err = cmdutil.FindFuzzyAlias(hc)
+			cmdutil.CheckErr("error while finding alias", err)
 		}
 		if alias == "" {
 			alias, err = cmd.Flags().GetString("alias")
 			if err != nil || alias == "" {
-				checkError("error in flag parsing", err)
+				cmdutil.CheckErr("error in flag parsing", err)
 
-				err = validateArgs(args)
-				checkError("error in validation", err)
+				err = cmdutil.ValidateArgss(args)
+				cmdutil.CheckErr("error in validation", err)
 				alias = args[0]
 			}
 		}
 
 		err = hc.Delete(alias)
-		checkError("error in delete", err)
+		cmdutil.CheckErr("error in delete", err)
 		err = hc.Save()
-		checkError("error in save", err)
+		cmdutil.CheckErr("error in save", err)
 
-		success(fmt.Sprintf("command with alias '%s' has been deleted\n", alias))
+		cmdutil.Success(fmt.Sprintf("command with alias '%s' has been deleted\n", alias))
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(deleteCmd)
+	NewCmdRoot().AddCommand(deleteCmd)
 	deleteCmd.Flags().StringP("alias", "a", "", "alias for the command")
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"hail/cmd/cmdutil"
 	"hail/internal/hailconfig"
 
 	"github.com/spf13/cobra"
@@ -18,11 +19,11 @@ var initCmd = &cobra.Command{
 			title = args[0]
 		}
 		cfgfile, err := hailconfig.Init(title)
-		checkError("error in init", err)
-		success(fmt.Sprintf("Initialized a file '%s'", cfgfile))
+		cmdutil.CheckErr("error in init", err)
+		cmdutil.Success(fmt.Sprintf("Initialized a file '%s'", cfgfile))
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd)
+	NewCmdRoot().AddCommand(initCmd)
 }

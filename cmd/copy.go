@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"hail/cmd/cmdutil"
 	"hail/internal/hailconfig"
 
 	"github.com/spf13/cobra"
@@ -13,14 +14,14 @@ var copyCmd = &cobra.Command{
 	Aliases: []string{"cp"},
 	Run: func(cmd *cobra.Command, args []string) {
 		oldAlias, err := cmd.Flags().GetString("oldAlias")
-		checkError("error in parsing flag", err)
+		cmdutil.CheckErr("error in parsing flag", err)
 
 		newAlias, err := cmd.Flags().GetString("newAlias")
-		checkError("error in parsing flag", err)
+		cmdutil.CheckErr("error in parsing flag", err)
 
 		if oldAlias == "" || newAlias == "" {
 			err = validateCopyOrMove(args)
-			checkError("error in validation", err)
+			cmdutil.CheckErr("error in validation", err)
 			oldAlias = args[0]
 			newAlias = args[1]
 		}
@@ -29,15 +30,15 @@ var copyCmd = &cobra.Command{
 		defer hc.Close()
 
 		err = hc.Parse()
-		checkError("error in parsing", err)
+		cmdutil.CheckErr("error in parsing", err)
 
 		err = hc.Copy(oldAlias, newAlias)
-		checkError("error in copy", err)
+		cmdutil.CheckErr("error in copy", err)
 
 		err = hc.Save()
-		checkError("error in save", err)
+		cmdutil.CheckErr("error in save", err)
 
-		success(fmt.Sprintf("command with alias '%s' has been copied to alias '%s'\n", oldAlias, newAlias))
+		cmdutil.Success(fmt.Sprintf("command with alias '%s' has been copied to alias '%s'\n", oldAlias, newAlias))
 
 	},
 }
@@ -50,7 +51,7 @@ func validateCopyOrMove(args []string) error {
 }
 
 func init() {
-	rootCmd.AddCommand(copyCmd)
+	NewCmdRoot().AddCommand(copyCmd)
 	copyCmd.Flags().StringP("oldAlias", "o", "", "old alias to be copied from")
 	copyCmd.Flags().StringP("newAlias", "n", "", "new alias to be copied to")
 }

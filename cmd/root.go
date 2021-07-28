@@ -1,20 +1,21 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
-	"hail/internal/fuzzy"
+	"hail/cmd/cmdutil"
 	"hail/internal/hailconfig"
 	"os"
 
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "hail",
-	Short: "hail is a cross-platform script management tool",
-	Run:   run,
+func NewCmdRoot() *cobra.Command {
+	return &cobra.Command{
+		Use:   "hail",
+		Short: "hail is a cross-platform script management tool",
+		Run:   run,
+	}
+
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -22,52 +23,27 @@ func run(cmd *cobra.Command, args []string) {
 	defer hc.Close()
 
 	err := hc.Parse()
-	checkError("error in parsing", err)
+	cmdutil.CheckErr("error in parsing", err)
 
-	alias, err := findFuzzyAlias(hc)
-	checkError("error while finding alias", err)
+	alias, err := cmdutil.FindFuzzyAlias(hc)
+	cmdutil.CheckErr("error while finding alias", err)
+
 	if alias == "" || !hc.IsPresent(alias) {
-		checkError("alias is not present", fmt.Errorf("no command is found with '%s' alias", alias))
+		cmdutil.CheckErr("alias is not present", fmt.Errorf("no command is found with '%s' alias", alias))
 	}
 
 	command, err := hc.Get(alias)
-	checkError("error in get", err)
+	cmdutil.CheckErr("error in get", err)
 	fmt.Fprintln(os.Stdout, command)
 }
 
-func findFuzzyAlias(hc *hailconfig.Hailconfig) (string, error) {
-	return fuzzy.NewIterativeGet(hc).FindAlias()
-}
-
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	if err := NewCmdRoot().Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 }
-func validateArgs(args []string) error {
-	if len(args) < 1 {
-		return errors.New("no alias is present")
-	}
-	if len(args) > 1 {
-		return errors.New("more than one alias is present")
-	}
-	return nil
-}
-
-func checkError(msg string, err error) {
-	if err != nil {
-		red := color.New(color.FgRed, color.Bold).SprintFunc()
-		fmt.Printf("%s: %s: %v\n", red("Error"), msg, err)
-		os.Exit(2)
-	}
-}
-
-func success(msg string) {
-	green := color.New(color.FgGreen, color.Bold).SprintFunc()
-	fmt.Printf("%s: %s", green("Success"), msg)
-}
 
 func init() {
-	rootCmd.AddCommand(NewCmdGet(hailconfig.DefaultLoader))
+	NewCmdRoot().AddCommand(NewCmdGet(hailconfig.DefaultLoader, os.Stdout))
 }

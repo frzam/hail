@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"hail/cmd/cmdutil"
 	"hail/internal/hailconfig"
 
 	"github.com/spf13/cobra"
@@ -15,13 +16,13 @@ var listCmd = &cobra.Command{
 		defer hc.Close()
 
 		err := hc.Parse()
-		checkError("error in parsing", err)
+		cmdutil.CheckErr("error in parsing", err)
 
 		err = hc.List()
-		checkError("error in list", err)
+		cmdutil.CheckErr("error in list", err)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+	NewCmdRoot().AddCommand(listCmd)
 }

@@ -30,7 +30,7 @@ func assertAddError(t *testing.T, got, want, key string) {
 
 func TestUpdate(t *testing.T) {
 
-	hc := newHailConfigDummy()
+	hc := NewHailConfigDummy()
 
 	want := "kubectl logs -f --tail=100"
 	hc.Update("kube-logs", want, "")
@@ -71,7 +71,7 @@ func assertIsPresent(t *testing.T, got, want bool) {
 }
 
 func TestDelete(t *testing.T) {
-	hc := newHailConfigDummy()
+	hc := NewHailConfigDummy()
 
 	err := hc.Delete("pv")
 	if err != nil {
@@ -87,7 +87,7 @@ func TestDelete(t *testing.T) {
 	}
 }
 func TestCopy(t *testing.T) {
-	hc := newHailConfigDummy()
+	hc := NewHailConfigDummy()
 
 	oldAlias := "oc-login"
 	newAlias := "login"
@@ -125,7 +125,7 @@ func TestCopy(t *testing.T) {
 
 func TestMove(t *testing.T) {
 
-	hc := newHailConfigDummy()
+	hc := NewHailConfigDummy()
 
 	// Basic Move
 	oldAlias := "pv"
@@ -168,7 +168,7 @@ func TestMove(t *testing.T) {
 
 }
 
-func newHailConfigDummy() *Hailconfig {
+func NewHailConfigDummy() *Hailconfig {
 	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
 	hc.Parse()
 	for k, v := range scripts {

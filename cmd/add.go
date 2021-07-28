@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"hail/cmd/cmdutil"
 	"hail/internal/editor"
 	"hail/internal/hailconfig"
 	"os"
@@ -18,7 +19,7 @@ var addCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get alias either from -a flag or from args.
 		alias, err := getAlias(cmd, args)
-		checkError("error in validation", err)
+		cmdutil.CheckErr("error in validation", err)
 
 		// Get description from -d flag
 		des, _ := cmd.Flags().GetString("description")
@@ -27,25 +28,25 @@ var addCmd = &cobra.Command{
 		defer hc.Close()
 
 		err = hc.Parse()
-		checkError("error in parsing", err)
+		cmdutil.CheckErr("error in parsing", err)
 
 		if hc.IsPresent(alias) {
-			checkError("error in validation", fmt.Errorf("alias already present"))
+			cmdutil.CheckErr("error in validation", fmt.Errorf("alias already present"))
 		}
 
 		// Get Command from arguments or from editor
 		command, err := getCommand(cmd, args)
-		checkError("error in getting cmd", err)
+		cmdutil.CheckErr("error in getting cmd", err)
 
 		if alias == "" || command == "" {
-			checkError("error in validation", fmt.Errorf("no alias or command is present"))
+			cmdutil.CheckErr("error in validation", fmt.Errorf("no alias or command is present"))
 		}
 
 		hc.Add(alias, command, des)
 		err = hc.Save()
-		checkError("error in save", err)
+		cmdutil.CheckErr("error in save", err)
 
-		success(fmt.Sprintf("command with alias '%s' has been added\n", alias))
+		cmdutil.Success(fmt.Sprintf("command with alias '%s' has been added\n", alias))
 	},
 }
 
@@ -79,7 +80,7 @@ func getCommand(cmd *cobra.Command, args []string) (string, error) {
 	if len(args) == 1 && alias == "" || len(args) == 0 && alias != "" {
 		e := editor.NewDefaultEditor([]string{})
 		bCommand, _, err := e.LaunchTempFile("hail", false, os.Stdout)
-		checkError("error in launching temp file", err)
+		cmdutil.CheckErr("error in launching temp file", err)
 		command = string(bCommand)
 	} else if alias != "" && len(args) > 0 {
 		command = strings.Join(args[0:], "")
@@ -93,7 +94,7 @@ func getCommand(cmd *cobra.Command, args []string) (string, error) {
 }
 
 func init() {
-	rootCmd.AddCommand(addCmd)
+	NewCmdRoot().AddCommand(addCmd)
 	addCmd.Flags().StringP("alias", "a", "", "alias for the command")
 	addCmd.Flags().StringP("description", "d", "", "description of the command")
 	addCmd.Flags().StringP("file", "f", "", "path of the file that needs to be read as command")
