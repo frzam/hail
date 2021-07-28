@@ -94,7 +94,6 @@ func getCommand(cmd *cobra.Command, args []string) (string, error) {
 }
 
 func init() {
-	NewCmdRoot().AddCommand(addCmd)
 	addCmd.Flags().StringP("alias", "a", "", "alias for the command")
 	addCmd.Flags().StringP("description", "d", "", "description of the command")
 	addCmd.Flags().StringP("file", "f", "", "path of the file that needs to be read as command")

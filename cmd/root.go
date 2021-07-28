@@ -44,6 +44,9 @@ func Execute() {
 	}
 }
 
+var rootCmd *cobra.Command
+
 func init() {
-	NewCmdRoot().AddCommand(NewCmdGet(hailconfig.DefaultLoader, os.Stdout))
+	rootCmd = NewCmdRoot()
+	//rootCmd.AddCommand(NewCmdGet(hailconfig.DefaultLoader, os.Stdout))
 }
