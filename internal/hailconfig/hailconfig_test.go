@@ -12,9 +12,7 @@ var scripts = map[string]string{
 
 func TestAdd(t *testing.T) {
 
-	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
-	hc.Parse()
-
+	hc, _ := NewHailconfig(WithMockHailconfigLoader(""))
 	for k, v := range scripts {
 		hc.Add(k, v, "")
 	}

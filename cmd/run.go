@@ -14,8 +14,8 @@ var runCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		path, err := editor.CreateTempFile("hail", false, os.Stdout)
 		checkError("error while creating temp file", err)
-
-		command := get(cmd, args)
+		//TODO:
+		command := "" // get(cmd, args)
 		e := editor.NewDefaultEditor([]string{})
 		output, err := e.RunScript(path, command)
 		checkError("error in run script", err)

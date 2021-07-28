@@ -45,6 +45,17 @@ func (hc *Hailconfig) Close() error {
 	return hc.f.Close()
 }
 
+func NewHailconfig(l Loader) (*Hailconfig, error) {
+	hc := new(Hailconfig).WithLoader(Loader(l))
+	defer hc.Close()
+
+	err := hc.Parse()
+	if err != nil {
+		return nil, errors.Wrap(err, "error in parsing")
+	}
+	return hc, nil
+}
+
 // Add is used to add a new script to Scripts map.
 // It takes alias and command as input and creates a type of script and adds
 // to hc.Scripts map.

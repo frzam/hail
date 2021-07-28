@@ -67,3 +67,7 @@ func success(msg string) {
 	green := color.New(color.FgGreen, color.Bold).SprintFunc()
 	fmt.Printf("%s: %s", green("Success"), msg)
 }
+
+func init() {
+	rootCmd.AddCommand(NewCmdGet(hailconfig.DefaultLoader))
+}

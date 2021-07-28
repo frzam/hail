@@ -3,57 +3,58 @@ package cmd
 import (
 	"fmt"
 	"hail/internal/hailconfig"
+	"io"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
-var getCmd = &cobra.Command{
-	Use:   "get [alias]",
-	Short: "get retrieves command basis the alias.",
-	Run:   runGet,
+type GetOptions struct {
+	Alias   string
+	Command string
 }
 
-func runGet(cmd *cobra.Command, args []string) {
-	command := get(cmd, args)
-	fmt.Fprintln(os.Stdout, command)
+func NewGetOptions() *GetOptions {
+	return &GetOptions{}
 }
 
-func get(cmd *cobra.Command, args []string) string {
+func NewCmdGet(loader hailconfig.Loader) *cobra.Command {
+	return &cobra.Command{
+		Use:   "get [alias]",
+		Short: "get retrieves command basis the alias.",
+		Run: func(cmd *cobra.Command, args []string) {
+			o := NewGetOptions()
 
-	hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
-	defer hc.Close()
+			hc, err := hailconfig.NewHailconfig(loader)
+			checkError("error in new hailconfig", err)
 
-	err := hc.Parse()
-	checkError("error in parsing", err)
+			if len(args) == 0 {
+				o.Alias, err = findFuzzyAlias(hc)
+				checkError("error while finding alias", err)
+			}
 
-	alias := ""
-	if len(args) == 0 {
-		alias, err = findFuzzyAlias(hc)
-		checkError("error while finding alias", err)
+			if o.Alias == "" && len(args) > 0 {
+				err = validateArgs(args)
+				checkError("error in validation", err)
+				o.Alias = args[0]
+			}
+
+			o.Run(hc, os.Stdout)
+		},
 	}
-	if alias == "" {
+}
 
-		if len(args) == 0 {
-			alias, err = findFuzzyAlias(hc)
-			checkError("error while finding alias", err)
-		}
-		if alias == "" {
-			err = validateArgs(args)
-			checkError("error in validation", err)
-			alias = args[0]
-		}
-
+func (o *GetOptions) Run(hc *hailconfig.Hailconfig, w io.Writer) {
+	if o.Alias == "" {
+		checkError("error in validation", fmt.Errorf("no alias is found"))
 	}
 
-	if !hc.IsPresent(alias) {
-		checkError("alias is not present", fmt.Errorf("no command is found with '%s' alias", alias))
+	if !hc.IsPresent(o.Alias) {
+		checkError("alias is not present", fmt.Errorf("no command is found with '%s' alias", o.Alias))
 	}
-	command, err := hc.Get(alias)
+	var err error
+	o.Command, err = hc.Get(o.Alias)
 	checkError("error in get", err)
-	return command
-}
 
-func init() {
-	rootCmd.AddCommand(getCmd)
+	fmt.Fprintln(w, o.Command)
 }
