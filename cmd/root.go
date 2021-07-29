@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var rootCmd *cobra.Command
+
 func NewCmdRoot() *cobra.Command {
 	return &cobra.Command{
 		Use:   "hail",
@@ -38,15 +40,13 @@ func run(cmd *cobra.Command, args []string) {
 }
 
 func Execute() {
-	if err := NewCmdRoot().Execute(); err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 }
 
-var rootCmd *cobra.Command
-
 func init() {
 	rootCmd = NewCmdRoot()
-	//rootCmd.AddCommand(NewCmdGet(hailconfig.DefaultLoader, os.Stdout))
+	rootCmd.AddCommand(NewCmdGet(hailconfig.DefaultLoader, os.Stdout))
 }
