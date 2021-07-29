@@ -20,6 +20,9 @@ func NewGetOptions() *GetOptions {
 	return &GetOptions{}
 }
 
+// NewCmdGet returns a *cobra.Command, it set alias in GetOptions field and
+// calls Run() method. If error is present in validation or during execution of
+// Run() method, then program exits with an error message.
 func NewCmdGet(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	return &cobra.Command{
 		Use:   "get [alias]",
@@ -40,7 +43,6 @@ func NewCmdGet(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 				cmdutil.CheckErr("error in validation", err)
 				o.Alias = args[0]
 			}
-
 			cmdutil.CheckErr("error in run", o.Run(hc, w))
 		},
 	}

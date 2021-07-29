@@ -53,6 +53,15 @@ func NewHailconfig(l Loader) (*Hailconfig, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "error in parsing")
 	}
+	switch l.(type) {
+	case *MockHailconfigLoader:
+		for k, v := range TestScripts {
+			hc.Add(k, v, "")
+		}
+	default:
+		return hc, nil
+	}
+
 	return hc, nil
 }
 

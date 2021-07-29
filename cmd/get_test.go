@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"hail/internal/hailconfig"
 	"io/ioutil"
+	"os"
+	"os/exec"
 	"testing"
 )
 
@@ -42,17 +44,23 @@ func Test_RunGet(t *testing.T) {
 }
 
 func Test_CmdGet(t *testing.T) {
-	b := bytes.NewBufferString("")
-	cmd := NewCmdGet(hailconfig.WithMockHailconfigLoader(""), b)
-	cmd.SetArgs([]string{"pv", "klogs"})
-	_ = cmd.Execute()
+	if os.Getenv("ERROR") == "1" {
+		// TEST error with multiple aliases.
+		b := bytes.NewBufferString("")
+		cmd := NewCmdGet(hailconfig.WithMockHailconfigLoader(""), b)
+		cmd.SetArgs([]string{"pv", "klogs"})
+		_ = cmd.Execute()
+	}
 
-	// Test validations
-
-	// multiple alias is present
-	cmd.SetArgs([]string{"pv", "klogs"})
-	gotErr := cmd.Execute().Error()
-	wantErr := "Error: error in validation: more than one alias is present"
+	c := exec.Command(os.Args[0], "-test.run=Test_CmdGet")
+	c.Env = append(c.Env, "ERROR=1")
+	stdout, _ := c.StdoutPipe()
+	if err := c.Start(); err != nil {
+		t.Fatal(err)
+	}
+	gotBytes, _ := ioutil.ReadAll(stdout)
+	gotErr := string(gotBytes)
+	wantErr := "Error: error in validation: more than one alias is present\n"
 	assertErr(wantErr, gotErr, t)
 }
 func assertErr(wantErr, gotErr string, t *testing.T) {
