@@ -12,6 +12,7 @@ import (
 func Test_RunGet(t *testing.T) {
 	o := NewGetOptions()
 	hc, _ := hailconfig.NewHailconfig(hailconfig.WithMockHailconfigLoader(""))
+	defer hc.Close()
 	b := bytes.NewBufferString("")
 
 	// Test that alias is getting returned properly.
@@ -49,7 +50,7 @@ func Test_CmdGet(t *testing.T) {
 		b := bytes.NewBufferString("")
 		cmd := NewCmdGet(hailconfig.WithMockHailconfigLoader(""), b)
 		cmd.SetArgs([]string{"pv", "klogs"})
-		_ = cmd.Execute()
+		cmd.Execute()
 	}
 
 	c := exec.Command(os.Args[0], "-test.run=Test_CmdGet")

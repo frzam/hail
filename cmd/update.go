@@ -9,13 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const updateExample = `  # Update Command with 'delete-pods' alias
-  hail update delete-pods 'kubectl delete pod $(kubectl get pods | grep Completed | awk '{print $1}')'`
-
 var updateCmd = &cobra.Command{
 	Use:     "update [alias] [command]",
 	Short:   "updates already present command.",
-	Example: updateExample,
+	Example: cmdutil.UpdateExample,
 	Run: func(cmd *cobra.Command, args []string) {
 		alias, err := cmd.Flags().GetString("alias")
 		des, _ := cmd.Flags().GetString("description")

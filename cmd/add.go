@@ -21,6 +21,7 @@ type AddOptions struct {
 	FileFlag        string
 }
 
+// NewAddOptions returns an empty AddOptions.
 func NewAddOptions() *AddOptions {
 	return &AddOptions{}
 }
@@ -47,7 +48,6 @@ func NewCmdAdd(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 
 			hc, err := hailconfig.NewHailconfig(loader)
 			cmdutil.CheckErr("error in new hailconfig", err)
-
 			defer hc.Close()
 
 			if hc.IsPresent(o.Alias) {
@@ -70,11 +70,15 @@ func NewCmdAdd(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	return cmd
 }
 
+// Run adds command and discription with alias, it then calls Save() which saves trucates
+// data in hailconfig file.
 func (o *AddOptions) Run(hc *hailconfig.Hailconfig, w io.Writer) error {
 	hc.Add(o.Alias, o.Command, o.DescriptionFlag)
 	return hc.Save()
 }
 
+// getAlias finds alias from flag or args. If no alias is found then it
+// returns error.
 func getAlias(cmd *cobra.Command, args []string) (string, error) {
 	alias, err := cmd.Flags().GetString("alias")
 	if err != nil {
@@ -89,6 +93,8 @@ func getAlias(cmd *cobra.Command, args []string) (string, error) {
 	return alias, nil
 }
 
+// getCommand finds the command either from args or file or from editor, if no command is found
+// then it returns error.
 func getCommand(cmd *cobra.Command, args []string) (string, error) {
 	command := ""
 	// Read command from a file.
