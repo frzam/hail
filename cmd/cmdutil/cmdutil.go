@@ -30,7 +30,7 @@ func CheckErr(msg string, err error) {
 
 func Success(msg string) {
 	green := color.New(color.FgGreen, color.Bold).SprintFunc()
-	fmt.Printf("%s: %s", green("cmdutil.Success"), msg)
+	fmt.Printf("%s: %s", green("Success"), msg)
 }
 
 func FindFuzzyAlias(hc *hailconfig.Hailconfig) (string, error) {

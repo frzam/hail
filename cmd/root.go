@@ -49,4 +49,5 @@ func Execute() {
 func init() {
 	rootCmd = NewCmdRoot()
 	rootCmd.AddCommand(NewCmdGet(hailconfig.DefaultLoader, os.Stdout))
+	rootCmd.AddCommand(NewCmdAdd(hailconfig.DefaultLoader, os.Stdout))
 }

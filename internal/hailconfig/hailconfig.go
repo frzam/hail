@@ -47,8 +47,6 @@ func (hc *Hailconfig) Close() error {
 
 func NewHailconfig(l Loader) (*Hailconfig, error) {
 	hc := new(Hailconfig).WithLoader(Loader(l))
-	defer hc.Close()
-
 	err := hc.Parse()
 	if err != nil {
 		return nil, errors.Wrap(err, "error in parsing")

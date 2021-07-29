@@ -5,6 +5,7 @@ import (
 	"hail/cmd/cmdutil"
 	"hail/internal/editor"
 	"hail/internal/hailconfig"
+	"io"
 	"os"
 	"strings"
 
@@ -12,42 +13,66 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var addCmd = &cobra.Command{
-	Use:       "add [alias] [command]",
-	Short:     "add is used to add a new command in collection",
-	ValidArgs: []string{"alias", "command"},
-	Run: func(cmd *cobra.Command, args []string) {
-		// Get alias either from -a flag or from args.
-		alias, err := getAlias(cmd, args)
-		cmdutil.CheckErr("error in validation", err)
+type AddOptions struct {
+	Alias           string
+	Command         string
+	AliasFlag       string
+	DescriptionFlag string
+	FileFlag        string
+}
 
-		// Get description from -d flag
-		des, _ := cmd.Flags().GetString("description")
+func NewAddOptions() *AddOptions {
+	return &AddOptions{}
+}
 
-		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
-		defer hc.Close()
+func NewCmdAdd(loader hailconfig.Loader, w io.Writer) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:       "add [alias] [command]",
+		Short:     "add is used to add a new command in collection",
+		ValidArgs: []string{"alias", "command"},
+		Run: func(cmd *cobra.Command, args []string) {
+			o := NewAddOptions()
 
-		err = hc.Parse()
-		cmdutil.CheckErr("error in parsing", err)
+			var err error
 
-		if hc.IsPresent(alias) {
-			cmdutil.CheckErr("error in validation", fmt.Errorf("alias already present"))
-		}
+			// Get alias either from -a flag or from args.
+			o.Alias, err = getAlias(cmd, args)
+			cmdutil.CheckErr("error in validation", err)
 
-		// Get Command from arguments or from editor
-		command, err := getCommand(cmd, args)
-		cmdutil.CheckErr("error in getting cmd", err)
+			// Get description from -d flag
+			o.DescriptionFlag, _ = cmd.Flags().GetString("description")
 
-		if alias == "" || command == "" {
-			cmdutil.CheckErr("error in validation", fmt.Errorf("no alias or command is present"))
-		}
+			// Get file from -d flag
+			o.FileFlag, _ = cmd.Flags().GetString("file")
 
-		hc.Add(alias, command, des)
-		err = hc.Save()
-		cmdutil.CheckErr("error in save", err)
+			hc, err := hailconfig.NewHailconfig(loader)
+			cmdutil.CheckErr("error in new hailconfig", err)
 
-		cmdutil.Success(fmt.Sprintf("command with alias '%s' has been added\n", alias))
-	},
+			defer hc.Close()
+
+			if hc.IsPresent(o.Alias) {
+				cmdutil.CheckErr("error in validation", fmt.Errorf("alias already present"))
+			}
+			// Get Command from arguments or from editor
+			o.Command, err = getCommand(cmd, args)
+			cmdutil.CheckErr("error in getting cmd", err)
+
+			if o.Alias == "" || o.Command == "" {
+				cmdutil.CheckErr("error in validation", fmt.Errorf("no alias or command is present"))
+			}
+			cmdutil.CheckErr("error in run", o.Run(hc, w))
+			cmdutil.Success(fmt.Sprintf("command with alias '%s' has been added\n", o.Alias))
+		},
+	}
+	cmd.Flags().StringP("alias", "a", "", "alias for the command")
+	cmd.Flags().StringP("description", "d", "", "description of the command")
+	cmd.Flags().StringP("file", "f", "", "path of the file that needs to be read as command")
+	return cmd
+}
+
+func (o *AddOptions) Run(hc *hailconfig.Hailconfig, w io.Writer) error {
+	hc.Add(o.Alias, o.Command, o.DescriptionFlag)
+	return hc.Save()
 }
 
 func getAlias(cmd *cobra.Command, args []string) (string, error) {
@@ -91,10 +116,4 @@ func getCommand(cmd *cobra.Command, args []string) (string, error) {
 		return command, fmt.Errorf("no command is found")
 	}
 	return command, nil
-}
-
-func init() {
-	addCmd.Flags().StringP("alias", "a", "", "alias for the command")
-	addCmd.Flags().StringP("description", "d", "", "description of the command")
-	addCmd.Flags().StringP("file", "f", "", "path of the file that needs to be read as command")
 }

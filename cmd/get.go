@@ -32,6 +32,7 @@ func NewCmdGet(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 
 			hc, err := hailconfig.NewHailconfig(loader)
 			cmdutil.CheckErr("error in new hailconfig", err)
+			defer hc.Close()
 
 			if len(args) == 0 {
 				o.Alias, err = cmdutil.FindFuzzyAlias(hc)
