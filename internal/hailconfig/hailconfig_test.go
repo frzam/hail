@@ -4,19 +4,19 @@ import (
 	"testing"
 )
 
-var scripts = map[string]string{
-	"oc-login":  "oc login -u farzam -p",
-	"kube-logs": "kubectl logs -f --tail=00 ",
-	"pv":        "oc get pv",
-}
+// var scripts = map[string]string{
+// 	"oc-login":  "oc login -u farzam -p",
+// 	"kube-logs": "kubectl logs -f --tail=00 ",
+// 	"pv":        "oc get pv",
+// }
 
 func TestAdd(t *testing.T) {
 
 	hc, _ := NewHailconfig(WithMockHailconfigLoader(""))
-	for k, v := range scripts {
+	for k, v := range TestScripts {
 		hc.Add(k, v, "")
 	}
-	for key, want := range scripts {
+	for key, want := range TestScripts {
 		got := hc.Scripts[key].Command
 		if got != want {
 			assertAddError(t, got, want, key)
@@ -30,8 +30,8 @@ func assertAddError(t *testing.T, got, want, key string) {
 
 func TestUpdate(t *testing.T) {
 
-	hc := NewHailConfigDummy()
-
+	hc, _ := NewHailconfig(WithMockHailconfigLoader(""))
+	defer hc.Close()
 	want := "kubectl logs -f --tail=100"
 	hc.Update("kube-logs", want, "")
 	got := hc.Scripts["kube-logs"].Command
@@ -57,7 +57,7 @@ func TestIsPresent(t *testing.T) {
 	hc.Parse()
 
 	assertIsPresent(t, hc.IsPresent("kube-logs"), false)
-	for k, v := range scripts {
+	for k, v := range TestScripts {
 		hc.Add(k, v, "")
 	}
 	assertIsPresent(t, hc.IsPresent("oc-login"), true)
@@ -71,8 +71,8 @@ func assertIsPresent(t *testing.T, got, want bool) {
 }
 
 func TestDelete(t *testing.T) {
-	hc := NewHailConfigDummy()
-
+	hc, _ := NewHailconfig(WithMockHailconfigLoader(""))
+	defer hc.Close()
 	err := hc.Delete("pv")
 	if err != nil {
 		t.Errorf("received error: %v, but error should have been nil", err)
@@ -87,7 +87,7 @@ func TestDelete(t *testing.T) {
 	}
 }
 func TestCopy(t *testing.T) {
-	hc := NewHailConfigDummy()
+	hc, _ := NewHailconfig(WithMockHailconfigLoader(""))
 
 	oldAlias := "oc-login"
 	newAlias := "login"
@@ -125,7 +125,7 @@ func TestCopy(t *testing.T) {
 
 func TestMove(t *testing.T) {
 
-	hc := NewHailConfigDummy()
+	hc, _ := NewHailconfig(WithMockHailconfigLoader(""))
 
 	// Basic Move
 	oldAlias := "pv"
@@ -171,7 +171,7 @@ func TestMove(t *testing.T) {
 func NewHailConfigDummy() *Hailconfig {
 	hc := new(Hailconfig).WithLoader(WithMockHailconfigLoader(""))
 	hc.Parse()
-	for k, v := range scripts {
+	for k, v := range TestScripts {
 		hc.Add(k, v, "")
 	}
 	return hc
