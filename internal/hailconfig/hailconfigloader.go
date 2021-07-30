@@ -33,6 +33,7 @@ type Loader interface {
 type StandardHailConfigLoader struct {
 }
 
+// Loader
 var DefaultLoader Loader = new(StandardHailConfigLoader)
 
 // Load returns .hailconfig file as ReadWriteResetCloser. It gets the path from

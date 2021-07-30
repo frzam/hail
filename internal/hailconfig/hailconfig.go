@@ -8,6 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// aliasNotFoundErr
 var aliasNotFoundErr = errors.New("alias is not found")
 
 // script is each individual script. It has only one field Command.
@@ -31,6 +32,7 @@ type config struct {
 	Scripts map[string]Script `toml:"scripts"`
 }
 
+// WithLoader takes in a loader and assigns into *Hailconfig type.
 func (hc *Hailconfig) WithLoader(l Loader) *Hailconfig {
 	hc.loader = l
 	return hc
@@ -45,21 +47,27 @@ func (hc *Hailconfig) Close() error {
 	return hc.f.Close()
 }
 
+// NewHailconfig is a constuctor that take Loader and returns *Hailconfig and error.
+// It loads into *Hailconfig basis the loader provided and calls parse which parses the file
+// into config field of *Hailconfig and returns it.
+// It checks if the loader provided is *MockHailconfigLoader, if yes then it adds,
+// data from TestScripts as well and then returns it. It is used for testing.
 func NewHailconfig(l Loader) (*Hailconfig, error) {
 	hc := new(Hailconfig).WithLoader(Loader(l))
 	err := hc.Parse()
 	if err != nil {
 		return nil, errors.Wrap(err, "error in parsing")
 	}
+	// Checking to see if is called from test case func.
 	switch l.(type) {
 	case *MockHailconfigLoader:
+		// if yes, then add TestScripts data at the same time.
 		for k, v := range TestScripts {
 			hc.Add(k, v, "")
 		}
 	default:
 		return hc, nil
 	}
-
 	return hc, nil
 }
 
@@ -67,7 +75,6 @@ func NewHailconfig(l Loader) (*Hailconfig, error) {
 // It takes alias and command as input and creates a type of script and adds
 // to hc.Scripts map.
 func (hc *Hailconfig) Add(alias, command, des string) {
-
 	var sc Script
 	if des != "" {
 		sc = Script{
@@ -83,7 +90,6 @@ func (hc *Hailconfig) Add(alias, command, des string) {
 	if hc.Scripts == nil {
 		hc.Scripts = make(map[string]Script)
 	}
-
 	hc.Scripts[alias] = sc
 }
 
@@ -139,6 +145,8 @@ func (hc *Hailconfig) Delete(alias string) error {
 	return nil
 }
 
+// Copy checks if oldAlias is present and newAlias is not present or return error.
+// If above conditions are passed then it adds command with newAlias.
 func (hc *Hailconfig) Copy(oldAlias, newAlias string) error {
 	if !hc.IsPresent(oldAlias) {
 		return errors.New("old alias is not present")
@@ -150,6 +158,8 @@ func (hc *Hailconfig) Copy(oldAlias, newAlias string) error {
 	return nil
 }
 
+// Move checks for both oldAlias and new alias is present, if not then returns error.
+// Otherwise adds command with newAlias and then deletes the command with old alias.
 func (hc *Hailconfig) Move(oldAlias, newAlias string) error {
 	if !hc.IsPresent(oldAlias) {
 		return errors.New("old alias is not present")
@@ -169,13 +179,14 @@ func (hc *Hailconfig) Get(alias string) (string, error) {
 
 }
 
-// Parse Loads
+// Parse Loads the file and then decodes the content from file field of *Hailconfig
+// into config field. It returns error if any.
 func (hc *Hailconfig) Parse() error {
 	files, err := hc.loader.Load()
 	if err != nil {
 		return errors.Wrap(err, "failed to load")
 	}
-	f := files[0]
+	f := files[0] // Currently only on .hailconfig file is supported.
 	hc.f = f
 	_, err = toml.DecodeReader(hc.f, &hc.config)
 	if err != nil {
