@@ -76,31 +76,42 @@ var TestScripts = map[string]string{
 	"server-sh":             serverSh,
 }
 
+// MockHailconfigLoader is used for testing. It helps to read and write in memory instead of
+// file.
 type MockHailconfigLoader struct {
 	in  io.Reader
 	out bytes.Buffer
 }
 
+// Read method is used to Read input from MockHailconfigLoader. This is used to make
+// MockerHailconfigLoader implement ReadWriteResetCloser interface.
 func (t *MockHailconfigLoader) Read(p []byte) (n int, err error) {
 	return t.in.Read(p)
 }
 
+// Write is used write into out of MockerHailconfigLoader. This is used to make
+//  MockerHailconfigLoader implement ReadWriteResetCloser interface.
 func (t *MockHailconfigLoader) Write(p []byte) (n int, err error) {
 	return t.out.Write(p)
 }
 
+// Close is used to make MockerHailconfigLoader implement ReadWriteResetCloser interface.
 func (t *MockHailconfigLoader) Close() error {
 	return nil
 }
 
+// Resest is used to make MockerHailconfigLoader implement ReadWriteResetCloser interface.
 func (t *MockHailconfigLoader) Reset() error {
 	return nil
 }
 
+// Load returns MockHailconfigLoader as ReadWriteResetCloser, since it implements
+// all the needed methods.
 func (t *MockHailconfigLoader) Load() ([]ReadWriteResetCloser, error) {
 	return []ReadWriteResetCloser{ReadWriteResetCloser(t)}, nil
 }
 
+// WithMockHailconfigLoader returns a new MockHailconfigLoader with in as new string reader.
 func WithMockHailconfigLoader(hailconfig string) *MockHailconfigLoader {
 	return &MockHailconfigLoader{in: strings.NewReader(hailconfig)}
 }

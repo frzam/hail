@@ -45,7 +45,7 @@ var copyCmd = &cobra.Command{
 
 func validateCopyOrMove(args []string) error {
 	if len(args) != 2 {
-		return fmt.Errorf("invalid number of arguments. expected 2, recieved %d", len(args))
+		return fmt.Errorf("invalid number of arguments. expected 2, received %d", len(args))
 	}
 	return nil
 }

@@ -9,23 +9,35 @@ import (
 	"github.com/pkg/errors"
 )
 
+// hailconfigFile has file type embedded into it.
 type hailconfigFile struct {
 	*os.File
 }
+
+// ReadWriterResetCloser has ReadWriteCloser interface and Reset method
+// defined in it.
 type ReadWriteResetCloser interface {
 	io.ReadWriteCloser
 	Reset() error
 }
 
+// Loader interface has only Load method define on it,
+// it takes nothing and returns a slice of ReadWriterResetCloser interface
+// error.
 type Loader interface {
 	Load() ([]ReadWriteResetCloser, error)
 }
 
+// StandardHailConfigLoader is an empty struct to make
+// Load as a method.
 type StandardHailConfigLoader struct {
 }
 
 var DefaultLoader Loader = new(StandardHailConfigLoader)
 
+// Load returns .hailconfig file as ReadWriteResetCloser. It gets the path from
+// hailconfigPath then opens the file as RDWR and returns the file as ReadWriteResetCloser.
+// Otherwise returns nil and error.
 func (StandardHailConfigLoader) Load() ([]ReadWriteResetCloser, error) {
 	cfgPath, err := hailconfigPath()
 	if err != nil {
@@ -41,6 +53,9 @@ func (StandardHailConfigLoader) Load() ([]ReadWriteResetCloser, error) {
 	return []ReadWriteResetCloser{ReadWriteResetCloser(&hailconfigFile{f})}, nil
 }
 
+// Init func is used to create a new .hailconfig file with title given. It checks if file is not
+// present then only it creates a .hailconfig file with title and saves it. Otherwise returns
+// error that .hailconfig is already present.
 func Init(title string) (string, error) {
 	cfgfile, err := hailconfigPath()
 	if err != nil {
@@ -55,11 +70,14 @@ func Init(title string) (string, error) {
 		hc.config.Title = title
 		hc.f = &hailconfigFile{f}
 		return cfgfile, hc.Save()
-	} else {
+	} else { // If file is already present
 		return "", fmt.Errorf(".hailconfig is already present, can't do init at loc: %s", cfgfile)
 	}
 }
 
+// hailconfigPath looks for HAILCONFIG env variable, if it is not present then
+// it looks for home path and if not found returns error.
+// If home path is found then it add .hailconfig name returns the complete path.
 func hailconfigPath() (string, error) {
 	if v := os.Getenv("HAILCONFIG"); v != "" {
 		return v, nil
@@ -72,6 +90,7 @@ func hailconfigPath() (string, error) {
 	return filepath.Join(home, ".hailconfig"), nil
 }
 
+// homeDir is used find the home path of the system.
 func homeDir() string {
 	home := os.Getenv("HOME")
 	if home == "" {

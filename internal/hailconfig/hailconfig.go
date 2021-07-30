@@ -169,6 +169,7 @@ func (hc *Hailconfig) Get(alias string) (string, error) {
 
 }
 
+// Parse Loads
 func (hc *Hailconfig) Parse() error {
 	files, err := hc.loader.Load()
 	if err != nil {

@@ -75,7 +75,7 @@ func TestDelete(t *testing.T) {
 
 	err := hc.Delete("pv")
 	if err != nil {
-		t.Errorf("recieved error: %v, but error should have been nil", err)
+		t.Errorf("received error: %v, but error should have been nil", err)
 	}
 	if hc.IsPresent("pv") {
 		t.Errorf("alias should not be present")
