@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// AddOptions contains all the fields that are needed for add cmd.
 type AddOptions struct {
 	Alias           string
 	Command         string
