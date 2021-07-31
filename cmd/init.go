@@ -4,26 +4,43 @@ import (
 	"fmt"
 	"hail/cmd/cmdutil"
 	"hail/internal/hailconfig"
+	"io"
 
 	"github.com/spf13/cobra"
 )
 
-var initCmd = &cobra.Command{
-	Use:   "init [title]",
-	Short: "init initializes an empty .hailconfig file with title as provided",
-	Run: func(cmd *cobra.Command, args []string) {
-		title := ""
-		if len(args) < 1 {
-			title = "default"
-		} else {
-			title = args[0]
-		}
-		cfgfile, err := hailconfig.Init(title)
-		cmdutil.CheckErr("error in init", err)
-		cmdutil.Success(fmt.Sprintf("Initialized a file '%s'", cfgfile))
-	},
+// InitOptions contains field needed to run init cmd.
+type InitOptions struct {
+	Title   string
+	CfgFile string
 }
 
-func init() {
-	NewCmdRoot().AddCommand(initCmd)
+// NewInitOptoins return an empty *InitOptions
+func NewInitOptions() *InitOptions {
+	return &InitOptions{}
+}
+
+func NewCmdInit(loader hailconfig.Loader, w io.Writer) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "init [title]",
+		Short: "init initializes an empty .hailconfig file with title as provided",
+		Run: func(cmd *cobra.Command, args []string) {
+			o := NewInitOptions()
+			if len(args) < 1 {
+				o.Title = "default"
+			} else {
+				o.Title = args[0]
+			}
+			cmdutil.CheckErr("error in init", o.Run(&hailconfig.Hailconfig{}, w))
+			cmdutil.Success(fmt.Sprintf("Initialized a file '%s'", o.CfgFile))
+
+		},
+	}
+	return cmd
+}
+
+func (o *InitOptions) Run(_ *hailconfig.Hailconfig, _ io.Writer) error {
+	var err error
+	o.CfgFile, err = hailconfig.Init(o.Title)
+	return err
 }
