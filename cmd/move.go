@@ -17,10 +17,13 @@ type MoveOptions struct {
 	NewAliasFlag string
 }
 
+// NewMoveOption is a constructor that returns an empty *MoveOption.
 func NewMoveOption() *MoveOptions {
 	return &MoveOptions{}
 }
 
+// NewCmdMove creates move cmd and assigns flags to it as well. It calls Run method,
+// which performs the actual move and returns error if any.
 func NewCmdMove(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "move [old-alias] [new-alias]",
@@ -58,6 +61,7 @@ func NewCmdMove(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	return cmd
 }
 
+// Run method performs the move cmd or returns an error.
 func (o *MoveOptions) Run(hc *hailconfig.Hailconfig, _ io.Writer) error {
 	if o.OldAliasFlag != "" {
 		o.OldAlias = o.OldAliasFlag

@@ -24,7 +24,3 @@ var runCmd = &cobra.Command{
 		fmt.Fprintln(os.Stdout, "output", string(output))
 	},
 }
-
-func init() {
-	NewCmdRoot().AddCommand(runCmd)
-}

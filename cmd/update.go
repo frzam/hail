@@ -46,7 +46,6 @@ var updateCmd = &cobra.Command{
 }
 
 func init() {
-	NewCmdRoot().AddCommand(updateCmd)
 	updateCmd.Flags().StringP("alias", "a", "", "alias for the command")
 	updateCmd.Flags().StringP("description", "d", "", "descrition of the command")
 }
