@@ -92,4 +92,6 @@ func init() {
 	rootCmd.AddCommand(NewCmdInit(hailconfig.DefaultLoader, os.Stdout))
 	rootCmd.AddCommand(NewCmdList(hailconfig.DefaultLoader, os.Stdout))
 	rootCmd.AddCommand(NewCmdMove(hailconfig.DefaultLoader, os.Stdout))
+	rootCmd.AddCommand(NewCmdUpdate(hailconfig.DefaultLoader, os.Stdout))
+	rootCmd.AddCommand(NewCmdVersion(hailconfig.DefaultLoader, os.Stdout))
 }

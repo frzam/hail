@@ -58,7 +58,7 @@ spec:
 	cat .$g)|nc -l -p $1;}>/dev/fd/0;$0 $1`
 )
 
-// testScripts map is contains alias and command pair.
+// TestScripts map is contains alias and command pair.
 // It is used as already present scripts in hailconfig.
 var TestScripts = map[string]string{
 	"oc-login":              "oc login -u farzam -p",

@@ -6,6 +6,7 @@ import (
 	"io"
 )
 
+// Op ...
 type Op interface {
 	Run(hc *hailconfig.Hailconfig, stdout io.Writer) error
 }
