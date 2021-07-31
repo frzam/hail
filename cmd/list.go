@@ -3,26 +3,42 @@ package cmd
 import (
 	"hail/cmd/cmdutil"
 	"hail/internal/hailconfig"
+	"io"
 
 	"github.com/spf13/cobra"
 )
 
-var listCmd = &cobra.Command{
-	Use:     "list",
-	Short:   "list/ls prints all the alias and commands",
-	Aliases: []string{"ls"},
-	Run: func(cmd *cobra.Command, args []string) {
-		hc := new(hailconfig.Hailconfig).WithLoader(hailconfig.DefaultLoader)
-		defer hc.Close()
+// ListOptions is an empty struct since list need no options.
+type ListOptions struct{}
 
-		err := hc.Parse()
-		cmdutil.CheckErr("error in parsing", err)
-
-		err = hc.List()
-		cmdutil.CheckErr("error in list", err)
-	},
+// NewListOption is an empty constructor.
+func NewListOption() *ListOptions {
+	return &ListOptions{}
 }
 
-func init() {
-	NewCmdRoot().AddCommand(listCmd)
+// NewCmdList creates a list cmd, which when called list out all the alias,
+// with command and description in tabular form.
+func NewCmdList(loader hailconfig.Loader, w io.Writer) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "list",
+		Short:   "list/ls prints all the alias and commands",
+		Aliases: []string{"ls"},
+		Run: func(cmd *cobra.Command, args []string) {
+
+			o := NewListOption()
+
+			hc, err := hailconfig.NewHailconfig(loader)
+			cmdutil.CheckErr("error in new hailconfig", err)
+			defer hc.Close()
+
+			cmdutil.CheckErr("error in run", o.Run(hc, w))
+		},
+	}
+	return cmd
+}
+
+// Run calls List method and prints out the table containing all the alias,
+// command and descriptions.
+func (o *ListOptions) Run(hc *hailconfig.Hailconfig, _ io.Writer) error {
+	return hc.List()
 }

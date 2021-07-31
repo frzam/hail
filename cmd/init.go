@@ -20,6 +20,8 @@ func NewInitOptions() *InitOptions {
 	return &InitOptions{}
 }
 
+// NewCmdInit creates a cobra cmd, which when called will create a new .hailconfig file.
+// If file is already present then it will throw error.
 func NewCmdInit(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init [title]",
@@ -39,6 +41,8 @@ func NewCmdInit(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	return cmd
 }
 
+// Run calls the Init func that validates the location of .hailconfig, and if not present
+// then creates a file and returns it. Otherwise returns an error.
 func (o *InitOptions) Run(_ *hailconfig.Hailconfig, _ io.Writer) error {
 	var err error
 	o.CfgFile, err = hailconfig.Init(o.Title)
