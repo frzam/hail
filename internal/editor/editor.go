@@ -142,9 +142,8 @@ func platformize(linux, windows string) string {
 }
 
 func (e Editor) RunScript(filename string, command string) ([]byte, error) {
-	fmt.Println("filename: ", filename)
 	f, _ := os.OpenFile(filename, os.O_RDWR, 0)
-	//defer os.Remove(filename)
+	defer os.Remove(filename)
 	defer f.Close()
 
 	_, err := io.Copy(f, strings.NewReader(command))
@@ -160,15 +159,7 @@ func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 			break
 		}
 	}
-	var interpreter string
-	fmt.Println("shebangList: ", shebangList)
-	if len(shebangList) > 1 {
-		interpreter = shebangList[1]
-	} else if len(shebangList) == 1 {
-		s := strings.Split(shebangList[0], "/")
-		interpreter = s[len(s)-1]
-	}
-
+	interpreter := getInterpreter(shebangList)
 	if interpreter == "" {
 		cmdList := strings.Split(command, " ")
 		interpreter = cmdList[0]
@@ -180,8 +171,6 @@ func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 	} else {
 		return executeCmd(interpreter, filename)
 	}
-	fmt.Println("command: ", command)
-	fmt.Println("interpreter: ", interpreter)
 	return executeCmd(interpreter, command)
 }
 
@@ -206,4 +195,15 @@ func executeCmd(interpreter, command string) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(stdout)
 	return buf.Bytes(), nil
+}
+
+func getInterpreter(shebangList []string) string {
+	var interpreter string
+	if len(shebangList) > 1 {
+		interpreter = shebangList[1]
+	} else if len(shebangList) == 1 {
+		s := strings.Split(shebangList[0], "/")
+		interpreter = s[len(s)-1]
+	}
+	return interpreter
 }
