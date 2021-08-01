@@ -171,6 +171,7 @@ func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 	} else {
 		return executeCmd(interpreter, filename)
 	}
+	fmt.Println("interpreter: ", interpreter)
 	return executeCmd(interpreter, command)
 }
 
@@ -178,6 +179,7 @@ func executeCmd(interpreter, command string) ([]byte, error) {
 	if command == "" {
 		return exec.Command(interpreter).Output()
 	}
+	fmt.Println("command: ", command)
 	cmd := exec.Command(interpreter, command)
 	stderr, _ := cmd.StderrPipe()
 	stdout, _ := cmd.StdoutPipe()

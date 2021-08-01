@@ -82,7 +82,7 @@ func Init(title string) (string, error) {
 // If home path is found then it add .hailconfig name returns the complete path.
 func hailconfigPath() (string, error) {
 	if v := os.Getenv("HAILCONFIG"); v != "" {
-		return v, nil
+		return filepath.Join(v, ".hailconfig"), nil
 	}
 	// default path
 	home := homeDir()

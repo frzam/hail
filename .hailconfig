@@ -1,0 +1,6 @@
+Title = "default"
+
+[scripts]
+  [scripts.path]
+    command = "echo $HAILCONFIG"
+    description = ""
