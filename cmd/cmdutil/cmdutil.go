@@ -31,7 +31,7 @@ func CheckErr(msg string, err error) {
 	}
 }
 
-// Sucess is called when the command works properly.
+// Success is called when the command works properly.
 func Success(msg string) {
 	green := color.New(color.FgGreen, color.Bold).SprintFunc()
 	fmt.Printf("%s: %s", green("Success"), msg)

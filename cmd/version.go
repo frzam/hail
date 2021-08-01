@@ -12,6 +12,7 @@ var (
 	version = "v0.1.8"
 )
 
+// NewCmdVersion creates version cmd, it prints out the latest version when runs.
 func NewCmdVersion(_ hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",

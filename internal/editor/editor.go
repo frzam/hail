@@ -2,6 +2,7 @@ package editor
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -101,7 +102,6 @@ func CreateTempFile(prefix string, edit bool, r io.Reader) (string, error) {
 		}
 	}
 	// This file descriptor needs to close so the next process (Launch) can claim it.
-	f.Close()
 	return path, err
 }
 
@@ -142,39 +142,68 @@ func platformize(linux, windows string) string {
 }
 
 func (e Editor) RunScript(filename string, command string) ([]byte, error) {
-
+	fmt.Println("filename: ", filename)
 	f, _ := os.OpenFile(filename, os.O_RDWR, 0)
+	//defer os.Remove(filename)
 	defer f.Close()
 
 	_, err := io.Copy(f, strings.NewReader(command))
 	if err != nil {
 		fmt.Println("error in copy", err)
-
 	}
-	scanner := bufio.NewScanner(f)
+	scanner := bufio.NewScanner(strings.NewReader(command))
+
 	var shebangList []string
 	for scanner.Scan() {
-		fmt.Println(scanner.Text())
 		if strings.HasPrefix(scanner.Text(), "#!") {
 			shebangList = strings.Split(scanner.Text(), " ")
 			break
 		}
 	}
 	var interpreter string
+	fmt.Println("shebangList: ", shebangList)
 	if len(shebangList) > 1 {
 		interpreter = shebangList[1]
 	} else if len(shebangList) == 1 {
 		s := strings.Split(shebangList[0], "/")
 		interpreter = s[len(s)-1]
 	}
-	fmt.Println("interpreter: ", interpreter)
 
-	path, err := exec.LookPath(interpreter)
-	if err != nil {
-		// return nil, nil //fmt.Errorf("interpreter %s not found", interpreter)
+	if interpreter == "" {
+		cmdList := strings.Split(command, " ")
+		interpreter = cmdList[0]
+		if len(cmdList) > 1 {
+			command = strings.Join(cmdList[1:], " ")
+		} else {
+			command = ""
+		}
+	} else {
+		return executeCmd(interpreter, filename)
 	}
-	fmt.Println("path: ", path)
 	fmt.Println("command: ", command)
-	cmd, err := exec.Command(path, command).Output()
-	return cmd, err
+	fmt.Println("interpreter: ", interpreter)
+	return executeCmd(interpreter, command)
+}
+
+func executeCmd(interpreter, command string) ([]byte, error) {
+	if command == "" {
+		return exec.Command(interpreter).Output()
+	}
+	cmd := exec.Command(interpreter, command)
+	stderr, _ := cmd.StderrPipe()
+	stdout, _ := cmd.StdoutPipe()
+	if err := cmd.Start(); err != nil {
+		return nil, err
+	}
+	scanner := bufio.NewScanner(stderr)
+	errStr := ""
+	for scanner.Scan() {
+		errStr += scanner.Text()
+	}
+	if errStr != "" {
+		return nil, fmt.Errorf("error in executing command: %s", errStr)
+	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(stdout)
+	return buf.Bytes(), nil
 }

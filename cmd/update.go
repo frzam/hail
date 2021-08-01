@@ -22,6 +22,8 @@ func NewUpdateOption() *UpdateOptions {
 	return &UpdateOptions{}
 }
 
+// NewCmdUpdate creates a update command. It validates the args and check for alias
+// and command.
 func NewCmdUpdate(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update [alias] [command]",
@@ -57,6 +59,7 @@ func NewCmdUpdate(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	return cmd
 }
 
+// Run updates command and description in hailconfig basis alias.
 func (o *UpdateOptions) Run(hc *hailconfig.Hailconfig, w io.Writer) error {
 	err := hc.Update(o.Alias, o.Command, o.Description)
 	if err != nil {

@@ -14,7 +14,7 @@ type fuzzyScript struct {
 	command string
 }
 
-// IteratinveGet is struct that contains a slice of fuzzyScripts.
+// IterativeGet is struct that contains a slice of fuzzyScripts.
 type IterativeGet struct {
 	FuzzyScripts []fuzzyScript
 }

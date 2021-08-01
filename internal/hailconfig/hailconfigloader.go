@@ -14,7 +14,7 @@ type hailconfigFile struct {
 	*os.File
 }
 
-// ReadWriterResetCloser has ReadWriteCloser interface and Reset method
+// ReadWriteResetCloser has ReadWriteCloser interface and Reset method
 // defined in it.
 type ReadWriteResetCloser interface {
 	io.ReadWriteCloser
@@ -33,7 +33,7 @@ type Loader interface {
 type StandardHailConfigLoader struct {
 }
 
-// Loader
+// DefaultLoader ...
 var DefaultLoader Loader = new(StandardHailConfigLoader)
 
 // Load returns .hailconfig file as ReadWriteResetCloser. It gets the path from
@@ -71,9 +71,10 @@ func Init(title string) (string, error) {
 		hc.config.Title = title
 		hc.f = &hailconfigFile{f}
 		return cfgfile, hc.Save()
-	} else { // If file is already present
-		return "", fmt.Errorf(".hailconfig is already present, can't do init at loc: %s", cfgfile)
 	}
+	// If file is already present
+	return "", fmt.Errorf(".hailconfig is already present, can't do init at loc: %s", cfgfile)
+
 }
 
 // hailconfigPath looks for HAILCONFIG env variable, if it is not present then
