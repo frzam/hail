@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func Test_Copy_Run(t *testing.T) {
+func Test_RunCopy(t *testing.T) {
 	o := NewCopyOption()
 	hc, _ := hailconfig.NewHailconfig(hailconfig.WithMockHailconfigLoader(""))
 	b := bytes.NewBufferString("")
