@@ -66,27 +66,3 @@ func Test_getCommand(t *testing.T) {
 	got, _ = getCommand(cmd, []string{want})
 	assertGotWant(want, got, t)
 }
-
-func Test_CmdAdd(t *testing.T) {
-	// Test add [alias] [cmd]
-	// if os.Getenv("TEST") == "1" {
-	// 	cmd := NewCmdAdd(hailconfig.WithMockHailconfigLoader(""), os.Stdout)
-	// 	cmd.SetArgs([]string{"dlogs", "kubectl logs -f --tail=100"})
-	// 	cmd.Execute()
-	// }
-	// c := exec.Command(os.Args[0], "-test.run=Test_CmdAdd")
-	// c.Env = append(c.Env, "TEST=1")
-	// stdout, _ := c.StdoutPipe()
-	// if err := c.Start(); err != nil {
-	// 	t.Fatal(err)
-	// }
-
-	// b, _ := ioutil.ReadAll(stdout)
-	// got := string(b)
-	//want := "Success: command with alias 'dlogs' has been added"
-
-	//fmt.Println("b: ", got)
-	// if os.Getenv("ERROR") == "1" {
-	// 	cmd := NewCmdAdd(hailconfig.WithMockHailconfigLoader(""), os.Stdout)
-	//}
-}
