@@ -74,7 +74,6 @@ func Init(title string) (string, error) {
 	}
 	// If file is already present
 	return "", fmt.Errorf(".hailconfig is already present, can't do init at loc: %s", cfgfile)
-
 }
 
 // hailconfigPath looks for HAILCONFIG env variable, if it is not present then

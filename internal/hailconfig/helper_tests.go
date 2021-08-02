@@ -100,7 +100,7 @@ func (t *MockHailconfigLoader) Close() error {
 	return nil
 }
 
-// Resest is used to make MockerHailconfigLoader implement ReadWriteResetCloser interface.
+// Reset is used to make MockHailconfigLoader implement ReadWriteResetCloser interface.
 func (t *MockHailconfigLoader) Reset() error {
 	return nil
 }

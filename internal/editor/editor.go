@@ -28,6 +28,7 @@ type Editor struct {
 	Shell bool
 }
 
+// NewDefaultEditor is a constructor that returns a pointer.
 func NewDefaultEditor(envs []string) Editor {
 	args, shell := defaultEnvEditor(envs)
 	return Editor{
@@ -35,6 +36,8 @@ func NewDefaultEditor(envs []string) Editor {
 		Shell: shell,
 	}
 }
+
+// defaultEnvEditor returns the default editor.
 func defaultEnvEditor(envs []string) ([]string, bool) {
 	var editor string
 	for _, env := range envs {
@@ -58,6 +61,7 @@ func defaultEnvEditor(envs []string) ([]string, bool) {
 	return append(shell, editor), true
 }
 
+// defaultEnvShell returns a default shell.
 func defaultEnvShell() []string {
 	shell := os.Getenv("SHELL")
 	if len(shell) == 0 {
@@ -70,6 +74,8 @@ func defaultEnvShell() []string {
 	return []string{shell, flag}
 }
 
+// LaunchTempFile creates a temp file and returns content, path and error if any. It calls
+// CreateTempFile to create a temperory file.
 func (e Editor) LaunchTempFile(prefix string, edit bool, r io.Reader) ([]byte, string, error) {
 	path, err := CreateTempFile(prefix, edit, r)
 	if err != nil {
@@ -87,6 +93,8 @@ func (e Editor) LaunchTempFile(prefix string, edit bool, r io.Reader) ([]byte, s
 	return bytes, path, err
 }
 
+// CreateTempFile is used to create temp file. If edit is passed as true, then it copies,
+// the content of io.Reader to file and returns path and error
 func CreateTempFile(prefix string, edit bool, r io.Reader) (string, error) {
 
 	f, err := os.CreateTemp("", prefix+"*")
@@ -101,10 +109,10 @@ func CreateTempFile(prefix string, edit bool, r io.Reader) (string, error) {
 			return "", err
 		}
 	}
-	// This file descriptor needs to close so the next process (Launch) can claim it.
 	return path, err
 }
 
+// Launch is used to launch a file and connect stdout and stderr pipes.
 func (e Editor) Launch(path string) error {
 	if len(e.Args) == 0 {
 		return fmt.Errorf("no editor is defined, can't open %s", path)
@@ -134,6 +142,7 @@ func (e Editor) args(path string) []string {
 	return args
 }
 
+// platformize returns the operating system of the machine.
 func platformize(linux, windows string) string {
 	if runtime.GOOS == "windows" {
 		return windows
@@ -141,6 +150,10 @@ func platformize(linux, windows string) string {
 	return linux
 }
 
+// RunScript is main method that is called with a filename and command and returns the
+// output of the running command.
+// It checks to see if the command contains shebang, if yes then it selects the
+// interpreter and runs the command basis the interpreter.
 func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 	f, _ := os.OpenFile(filename, os.O_RDWR, 0)
 	defer os.Remove(filename)
@@ -175,6 +188,7 @@ func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 	return executeCmd(interpreter, command)
 }
 
+// executeCmd executes the command basis the interpreter.
 func executeCmd(interpreter, command string) ([]byte, error) {
 	if command == "" {
 		return exec.Command(interpreter).Output()
