@@ -27,7 +27,8 @@ func NewAddOptions() *AddOptions {
 	return &AddOptions{}
 }
 
-// NewCmdAdd...
+// NewCmdAdd creates add cmd and flags, it validates the input and calls
+// Run to add alias and command.
 func NewCmdAdd(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       "add [alias] [command]",

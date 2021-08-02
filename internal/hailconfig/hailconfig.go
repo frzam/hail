@@ -1,6 +1,7 @@
 package hailconfig
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/BurntSushi/toml"
@@ -8,10 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// aliasNotFoundErr
-var aliasNotFoundErr = errors.New("alias is not found")
-
-// script is each individual script. It has only one field Command.
+// Script is each individual script. It has only one field Command.
 type Script struct {
 	Command     string `toml:"command"`
 	Description string `toml:"description"`
@@ -122,7 +120,7 @@ func (hc *Hailconfig) List() error {
 // If the alias is not present which is to be updated then returns error.
 func (hc *Hailconfig) Update(alias, command, des string) error {
 	if found := hc.IsPresent(alias); !found {
-		return aliasNotFoundErr
+		return fmt.Errorf("alias is not found")
 	}
 	hc.Add(alias, command, des)
 	return nil
@@ -138,7 +136,7 @@ func (hc *Hailconfig) IsPresent(alias string) bool {
 // It returns alias not found error when alias is not present
 func (hc *Hailconfig) Delete(alias string) error {
 	if !hc.IsPresent(alias) {
-		return aliasNotFoundErr
+		return fmt.Errorf("alias is not found")
 	}
 	delete(hc.Scripts, alias)
 	return nil
