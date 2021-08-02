@@ -27,8 +27,9 @@ func NewEditOption() *EditOptions {
 // then it opens the command in default editor and updates it after the command.
 func NewCmdEdit(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "edit [alias]",
-		Short: "It is used to edit previously added command or script in text editor.",
+		Use:     "edit [alias]",
+		Short:   "It is used to edit previously added command or script in text editor.",
+		Example: cmdutil.EditExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewEditOption()
 

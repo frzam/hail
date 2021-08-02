@@ -26,6 +26,7 @@ func NewCmdDelete(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete [alias]",
 		Short:   "delete/rm removes command from hail basis alias",
+		Example: cmdutil.DeleteExample,
 		Aliases: []string{"rm"},
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewDeleteOptions()

@@ -33,6 +33,7 @@ func NewCmdAdd(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       "add [alias] [command]",
 		Short:     "add is used to add a new command in collection",
+		Example:   cmdutil.AddExample,
 		ValidArgs: []string{"alias", "command"},
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewAddOptions()

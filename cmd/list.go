@@ -22,6 +22,7 @@ func NewCmdList(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "list",
 		Short:   "list/ls prints all the alias and commands",
+		Example: cmdutil.ListExample,
 		Aliases: []string{"ls"},
 		Run: func(cmd *cobra.Command, args []string) {
 

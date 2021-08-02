@@ -189,14 +189,15 @@ func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 }
 
 // executeCmd executes the command basis the interpreter.
-func executeCmd(interpreter, command string) ([]byte, error) {
-	if command == "" {
+func executeCmd(interpreter string, command ...string) ([]byte, error) {
+	if len(command) == 0 {
 		return exec.Command(interpreter).Output()
 	}
 	fmt.Println("command: ", command)
-	cmd := exec.Command(interpreter, command)
+	cmd := exec.Command(interpreter, command...)
 	stderr, _ := cmd.StderrPipe()
 	stdout, _ := cmd.StdoutPipe()
+	fmt.Println("cmd: ", cmd)
 	if err := cmd.Start(); err != nil {
 		return nil, err
 	}

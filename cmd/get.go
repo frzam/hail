@@ -25,8 +25,9 @@ func NewGetOptions() *GetOptions {
 // Run() method, then program exits with an error message.
 func NewCmdGet(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	return &cobra.Command{
-		Use:   "get [alias]",
-		Short: "get retrieves command basis the alias.",
+		Use:     "get [alias]",
+		Short:   "get retrieves command basis the alias.",
+		Example: cmdutil.GetExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewGetOptions()
 

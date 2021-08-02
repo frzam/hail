@@ -94,5 +94,6 @@ func init() {
 	rootCmd.AddCommand(NewCmdMove(hailconfig.DefaultLoader, os.Stdout))
 	rootCmd.AddCommand(NewCmdUpdate(hailconfig.DefaultLoader, os.Stdout))
 	rootCmd.AddCommand(NewCmdVersion(hailconfig.DefaultLoader, os.Stdout))
-	rootCmd.AddCommand(NewCmdRun(hailconfig.DefaultLoader, os.Stdout))
+	// TODO: Fix issue with run cmd.
+	//rootCmd.AddCommand(NewCmdRun(hailconfig.DefaultLoader, os.Stdout))
 }

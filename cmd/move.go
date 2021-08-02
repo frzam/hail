@@ -28,6 +28,7 @@ func NewCmdMove(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "move [old-alias] [new-alias]",
 		Short:   "move/mv used to move command with old alias to new alias.",
+		Example: cmdutil.MoveExample,
 		Aliases: []string{"mv"},
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewMoveOption()

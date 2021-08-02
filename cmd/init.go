@@ -24,8 +24,9 @@ func NewInitOptions() *InitOptions {
 // If file is already present then it will throw error.
 func NewCmdInit(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "init [title]",
-		Short: "init initializes an empty .hailconfig file with title as provided",
+		Use:     "init [title]",
+		Short:   "init initializes an empty .hailconfig file with title as provided",
+		Example: cmdutil.InitExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewInitOptions()
 			if len(args) < 1 {
