@@ -17,11 +17,12 @@ type CopyOptions struct {
 	NewAliasFlag string
 }
 
-// NewCopyOptions return an empty *CopyOption
+// NewCopyOption return an empty *CopyOption
 func NewCopyOption() *CopyOptions {
 	return &CopyOptions{}
 }
 
+// NewCmdCopy returns a command that create copy command.
 func NewCmdCopy(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "copy [old-alias] [new-alias]",
@@ -58,6 +59,7 @@ func NewCmdCopy(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	return cmd
 }
 
+// Run copies command with old alias to new alias.
 func (o *CopyOptions) Run(hc *hailconfig.Hailconfig, w io.Writer) error {
 	if o.OldAliasFlag != "" {
 		o.OldAlias = o.OldAliasFlag
@@ -72,6 +74,7 @@ func (o *CopyOptions) Run(hc *hailconfig.Hailconfig, w io.Writer) error {
 	return hc.Save()
 }
 
+// validataeCopyOrMove validates if two arguments are present
 func validateCopyOrMove(args []string) error {
 	if len(args) != 2 {
 		return fmt.Errorf("invalid number of arguments. expected 2, received %d", len(args))

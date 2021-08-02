@@ -23,6 +23,8 @@ func NewEditOption() *EditOptions {
 	return &EditOptions{}
 }
 
+// NewCmdEdit creates cobra command and it gets the alias then basis alias gets the command
+// then it opens the command in default editor and updates it after the command.
 func NewCmdEdit(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "edit [alias]",

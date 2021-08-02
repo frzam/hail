@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// DeletOptions contains fields to perform delete cmd.
+// DeleteOptions  contains fields to perform delete cmd.
 type DeleteOptions struct {
 	Alias   string
 	Command string

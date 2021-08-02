@@ -15,7 +15,7 @@ type InitOptions struct {
 	CfgFile string
 }
 
-// NewInitOptoins return an empty *InitOptions
+// NewInitOptions return an empty *InitOptions
 func NewInitOptions() *InitOptions {
 	return &InitOptions{}
 }

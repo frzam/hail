@@ -27,6 +27,7 @@ func NewAddOptions() *AddOptions {
 	return &AddOptions{}
 }
 
+// NewCmdAdd...
 func NewCmdAdd(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:       "add [alias] [command]",
