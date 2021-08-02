@@ -57,8 +57,8 @@ func NewCmdMove(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 			cmdutil.Success(fmt.Sprintf("command with alias '%s' has been moved to alias '%s'\n", o.OldAlias, o.NewAlias))
 		},
 	}
-	cmd.Flags().StringP("oldAlias", "o", "", "old alias to be copied from")
-	cmd.Flags().StringP("newAlias", "n", "", "new alias to be copied to")
+	cmd.Flags().StringP("oldAlias", "o", "", "old alias to be moved from")
+	cmd.Flags().StringP("newAlias", "n", "", "new alias to be moved to")
 	return cmd
 }
 
