@@ -9,12 +9,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master
+
     - name: Setup go
       uses: actions/setup-go@v1
       with:
         go-version: 1.16
     - name: Run unit tests
       run: go test ./...
+    - name: Coverage
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: GoReleaser
       uses: goreleaser/goreleaser-action@v2
       with:
