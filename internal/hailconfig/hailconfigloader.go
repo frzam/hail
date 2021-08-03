@@ -70,7 +70,7 @@ func Init(title string) (string, error) {
 		hc := new(Hailconfig).WithLoader(DefaultLoader)
 		hc.config.Title = title
 		hc.f = &hailconfigFile{f}
-		return cfgfile, hc.Save()
+		return cfgfile, nil
 	}
 	// If file is already present
 	return "", fmt.Errorf(".hailconfig is already present, can't do init at loc: %s", cfgfile)
