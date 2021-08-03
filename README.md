@@ -3,7 +3,10 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=frzam_hail&metric=alert_status)](https://sonarcloud.io/dashboard?id=frzam_hail)
 ![example workflow](https://github.com/frzam/hail/actions/workflows/release.yml/badge.svg)
  [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
- [![avc](https://bestpractices.coreinfrastructure.org/badge_static/72)](https://bestpractices.coreinfrastructure.org/en/projects/5082)
+[![GO Version]( https://img.shields.io/github/go-mod/go-version/frzam/hail
+)]( https://img.shields.io/github/go-mod/go-version/frzam/hail
+)
+ [![CII](https://bestpractices.coreinfrastructure.org/badge_static/72)](https://bestpractices.coreinfrastructure.org/en/projects/5082)
 > Cross-Platform script management CLI written in go.
 
 * [About](#about)
@@ -30,28 +33,39 @@ hail is a cross-platfrom script management CLI written in go.
 
 ## Installation
 ### Linux or Unix
-* Download the latest version of hail from releases https://github.com/frzam/hail/releases/<br>
-    ```> wget https://github.com/frzam/hail/releases/download/v0.1.11/hail_0.1.11_Linux_x86_64.tar.gz```
-* Unzip the tar.gz file <br>
-    ```> tar -xf hail_0.1.11_Linux_x86_64.tar.gz```    
-* Give execute permission to *hail*<br>
-    ```> chmod +x hail```    
-* Move the binary into *bin* folder so the it is accessible everywhere.<br>
-    ```> mv hail /usr/local/bin/```
-* Test if hail is working properly.<br>
-    ```> hail version```
-* Initialize hailconfig, it will create *.hailconfig* file under **$HOME**. If you want to create *.hailconfig* anywhere else then set env **HAILCONFIG** to that path.<br>
-    ```> hail init <title>```
-* [OPTIONAL] Set up tab auto completion for bash. Auto completion scripts are also available for fish and zsh.
-    * Generate bash script in a file<br>
-      ```> hail completion bash > ~/.hail```
-    * Open ~/.bashrc in editor<br>
-        ```> vi ~/.bashrc```
-    * Add below line in .bashrc<br>
-       ```> source ~/.hail```
-     * Refresh .bashrc by doing<br>
-        ```> source ~/.bashrc```  
+```python
+# Download the latest version of hail from releases https://github.com/frzam/hail/releases/
+> wget https://github.com/frzam/hail/releases/download/v0.1.11/hail_0.1.11_Linux_x86_64.tar.gz
 
+# Unzip the tar.gz file 
+> tar -xf hail_0.1.11_Linux_x86_64.tar.gz
+
+# Give execute permission to hail
+> chmod +x hail
+
+# Move the binary into bin folder so the it is accessible everywhere.
+> mv hail /usr/local/bin/
+
+# Test if hail is working properly.
+> hail version
+
+# Initialize hailconfig, it will create .hailconfig file under $HOME. If you want to create .hailconfig anywhere else then set env HAILCONFIGbto that path.
+> hail init <title>
+
+# [OPTIONAL] Set up tab auto completion for bash. Auto completion scripts are also available for fish and zsh.
+    
+# Generate bash script in a file
+> hail completion bash > ~/.hail
+
+# Open ~/.bashrc in editor
+> vi ~/.bashrc
+
+# Add below line in .bashrc
+> source ~/.hail
+
+# Refresh .bashrc by doing
+> source ~/.bashrc
+```
 ### Windows
 * Download the latest binary from releases https://github.com/frzam/hail/releases/ 
 * Unzip the **hail__Windows_x86_64.tar.gz** file into *hail.exe*
