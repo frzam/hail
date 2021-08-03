@@ -1,5 +1,6 @@
 # hail
 [![Go Report Card](https://goreportcard.com/badge/github.com/frzam/hail)](https://goreportcard.com/report/github.com/frzam/hail)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=frzam_hail&metric=alert_status)](https://sonarcloud.io/dashboard?id=frzam_hail)
 > Cross-Platform script management CLI written in go.
 
 * [About](#about)

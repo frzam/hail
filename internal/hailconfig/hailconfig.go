@@ -6,6 +6,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/nathan-fiscaletti/consolesize-go"
 	"github.com/pkg/errors"
 )
 
@@ -104,10 +105,36 @@ func (hc *Hailconfig) Save() error {
 
 // List is used to print all the aliases and commands in Scripts map.
 func (hc *Hailconfig) List() error {
+	cols, _ := consolesize.GetConsoleSize()
+	maxLenAlias := 25
+	maxLenCommand := 80
+	maxLenDescription := 25
+	if cols > 10 {
+		maxLenAlias = cols/4 - 5
+		maxLenCommand = cols / 2
+		maxLenDescription = cols/4 - 5
+	}
+
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.AppendHeader(table.Row{"Alias", "Command", "Description"})
-	t.SetColumnConfigs([]table.ColumnConfig{{}})
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{
+			Name:     "Alias",
+			WidthMin: 5,
+			WidthMax: maxLenAlias,
+		},
+		{
+			Name:     "Command",
+			WidthMin: 10,
+			WidthMax: maxLenCommand,
+		}, {
+			Name:     "Description",
+			WidthMin: 5,
+			WidthMax: maxLenDescription,
+		},
+	})
+	//t.SetAllowedRowLength(90)
 	for alias, script := range hc.Scripts {
 		t.AppendRow([]interface{}{alias, script.Command, script.Description})
 		t.AppendSeparator()
