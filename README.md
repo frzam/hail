@@ -1,6 +1,9 @@
 # hail
 [![Go Report Card](https://goreportcard.com/badge/github.com/frzam/hail)](https://goreportcard.com/report/github.com/frzam/hail)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=frzam_hail&metric=alert_status)](https://sonarcloud.io/dashboard?id=frzam_hail)
+![example workflow](https://github.com/frzam/hail/actions/workflows/release.yml/badge.svg)
+ [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+ [![avc](https://bestpractices.coreinfrastructure.org/badge_static/72)](https://bestpractices.coreinfrastructure.org/en/projects/5082)
 > Cross-Platform script management CLI written in go.
 
 * [About](#about)
