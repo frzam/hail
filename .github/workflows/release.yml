@@ -1,5 +1,8 @@
 name: Release
-
+on:
+  push:
+    branches:
+    - master
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
