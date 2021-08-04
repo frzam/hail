@@ -34,25 +34,22 @@ hail is a cross-platfrom script management CLI written in go.
 ## Installation
 ### Linux or Unix
 ```python
-# Download the latest version of hail from releases https://github.com/frzam/hail/releases/
-> wget https://github.com/frzam/hail/releases/download/v0.1.11/hail_0.1.11_Linux_x86_64.tar.gz
+# Download the latest version of hail from releases https://github.com/frzam/hail/releases/ and unzip the file
+> wget -c  https://github.com/frzam/hail/releases/download/v0.1.11/hail_0.1.11_Linux_x86_64.tar.gz -O - | tar -xz
 
-# Unzip the tar.gz file 
-> tar -xf hail_0.1.11_Linux_x86_64.tar.gz
 
-# Give execute permission to hail
-> chmod +x hail
-
-# Move the binary into bin folder so the it is accessible everywhere.
-> mv hail /usr/local/bin/
+# Give execute permission to hail and move the binary into bin folder so the it is accessible everywhere.
+> chmod +x hail | mv hail /usr/local/bin/
 
 # Test if hail is working properly.
 > hail version
 
-# Initialize hailconfig, it will create .hailconfig file under $HOME. If you want to create .hailconfig anywhere else then set env HAILCONFIGbto that path.
+# Initialize hailconfig, it will create .hailconfig file under $HOME. If you want to 
+# create .hailconfig anywhere else then set env HAILCONFIG to that path.
 > hail init <title>
-
-# [OPTIONAL] Set up tab auto completion for bash. Auto completion scripts are also available for fish and zsh.
+```
+[OPTIONAL] Set up tab auto completion for bash. Auto completion scripts are also available for fish and zsh.
+```python
     
 # Generate bash script in a file
 > hail completion bash > ~/.hail
