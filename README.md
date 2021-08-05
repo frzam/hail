@@ -1,4 +1,8 @@
-# hail
+<div style="text-align:center">
+    <h1 style= "font-weight:700">hail</h1>
+    <p><b>Cross-Platform Scripts Management CLI</b></p>
+</div>
+
 [![Go Report Card](https://goreportcard.com/badge/github.com/frzam/hail)](https://goreportcard.com/report/github.com/frzam/hail)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=frzam_hail&metric=alert_status)](https://sonarcloud.io/dashboard?id=frzam_hail)
 ![example workflow](https://github.com/frzam/hail/actions/workflows/release.yml/badge.svg)
@@ -35,10 +39,10 @@ hail is a cross-platfrom script management CLI written in go.
 ### Linux or Unix
 ```python
 # Download the latest version of hail from releases https://github.com/frzam/hail/releases/ and unzip the file
-> wget -c  https://github.com/frzam/hail/releases/download/v0.1.11/hail_0.1.11_Linux_x86_64.tar.gz -O - | tar -xz
+> wget -c https://github.com/frzam/hail/releases/download/v0.1.11/hail_0.1.11_Linux_x86_64.tar.gz -O - | tar -xz
 
 
-# Give execute permission to hail and move the binary into bin folder so the it is accessible everywhere.
+# Give execute permission to hail and move the binary into bin folder so it is accessible everywhere.
 > chmod +x hail | mv hail /usr/local/bin/
 
 # Test if hail is working properly.
@@ -64,11 +68,19 @@ hail is a cross-platfrom script management CLI written in go.
 > source ~/.bashrc
 ```
 ### Windows
-* Download the latest binary from releases https://github.com/frzam/hail/releases/ 
-* Unzip the **hail__Windows_x86_64.tar.gz** file into *hail.exe*
-* Place *hail.exe* into the *PATH*
-* Test if hail is working properly. Open Command Prompt, Powershell or Git bash and run.<br>
-    ```> hail version```
-* Initialize hailconfig, it will create .hailconfig file under **$USERPROFILE**. If you want to create .hailconfig anywhere else then set env **HAILCONFIG** to that path<br>    ```> hail init <title>```
-* Generate powershell completion script.<br>
-```> hail completion powershell```
+```python
+# Download the latest binary from releases https://github.com/frzam/hail/releases/ 
+
+# Unzip the hail__Windows_x86_64.tar.gz file into *hail.exe*
+
+# Place hail.exe into the PATH
+
+# Test if hail is working properly. Open Command Prompt, Powershell or Git bash and run.
+> hail version
+
+# Initialize hailconfig, it will create .hailconfig file under $USERPROFILE. If you want to create .hailconfig anywhere else then set env HAILCONFIG to that path
+> hail init <title>
+
+# Generate powershell completion script.<br>
+> hail completion powershell
+```
