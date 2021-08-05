@@ -64,7 +64,7 @@ func (o *RunOptions) Run(hc *hailconfig.Hailconfig, w io.Writer) error {
 
 	e := editor.NewDefaultEditor([]string{})
 
-	output, err := e.RunScript(o.Path, string(o.Command))
+	output, err := e.RunScript(o.Path, string(o.Command), hc)
 	if err != nil {
 		return err
 	}

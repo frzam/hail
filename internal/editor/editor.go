@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"hail/internal/hailconfig"
 	"io"
 	"io/ioutil"
 	"os"
@@ -154,7 +155,7 @@ func platformize(linux, windows string) string {
 // output of the running command.
 // It checks to see if the command contains shebang, if yes then it selects the
 // interpreter and runs the command basis the interpreter.
-func (e Editor) RunScript(filename string, command string) ([]byte, error) {
+func (e Editor) RunScript(filename string, command string, hc *hailconfig.Hailconfig) ([]byte, error) {
 	f, _ := os.OpenFile(filename, os.O_RDWR, 0)
 	defer os.Remove(filename)
 	defer f.Close()
@@ -173,24 +174,18 @@ func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 		}
 	}
 	interpreter := getInterpreter(shebangList)
+
 	if interpreter == "" {
-		cmdList := strings.Split(command, " ")
-		interpreter = cmdList[0]
-		if len(cmdList) > 1 {
-			cmdList = cmdList[1:]
-		}
-		return executeCmd(interpreter, cmdList)
+		interpreter = hc.Interpreter
 	}
-	return exec.Command(interpreter, filename).Output()
+	return executeCmd(interpreter, filename)
 
 }
 
 // executeCmd executes the command basis the interpreter.
-func executeCmd(interpreter string, commands []string) ([]byte, error) {
-	if len(commands) == 1 {
-		return exec.Command(interpreter).Output()
-	}
-	cmd := exec.Command(interpreter, commands...)
+func executeCmd(interpreter string, filename string) ([]byte, error) {
+
+	cmd := exec.Command(interpreter, filename)
 	stderr, _ := cmd.StderrPipe()
 	stdout, _ := cmd.StdoutPipe()
 	if err := cmd.Start(); err != nil {
