@@ -45,7 +45,7 @@ const (
 	`
 	// InitExample
 	InitExample = `  # Init a .hailconfig file at default location $HOME or set env variable HAILCONFIG to path.
-  hail init 
+  hail init -t my-scripts -i bash
 
   # Init with a title
   hail init linux-scripts

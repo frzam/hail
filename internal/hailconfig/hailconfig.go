@@ -221,6 +221,7 @@ func (hc *Hailconfig) Parse() error {
 	return nil
 }
 
+// ListConfigProperties prints a list of all the properties.
 func (hc *Hailconfig) ListConfigProperties(w io.Writer) {
 	t := table.NewWriter()
 	t.SetOutputMirror(w)
@@ -231,6 +232,7 @@ func (hc *Hailconfig) ListConfigProperties(w io.Writer) {
 	t.Render()
 }
 
+// UpdateConfigProperties updates configuration properties present in .hailconfig
 func (hc *Hailconfig) UpdateConfigProperties(name, value string) error {
 	if name == "" || value == "" {
 		return errors.New("invalid config name or value")

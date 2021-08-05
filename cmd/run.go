@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RunOptions contains fields to perform Run cmd.
 type RunOptions struct {
 	Alias   string
 	Command string

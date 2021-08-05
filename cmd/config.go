@@ -9,16 +9,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ConfigOptions contains fields to perform configuration related operations
 type ConfigOptions struct {
 	List  bool
 	Name  string
 	Value string
 }
 
+// NewconfigOption creates an empty *ConfigOptions
 func NewConfigOption() *ConfigOptions {
 	return &ConfigOptions{}
 }
 
+// NewCmdConfig creates cmd to perform config operations
 func NewCmdConfig(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config [flags]",
@@ -45,6 +48,7 @@ func NewCmdConfig(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	return cmd
 }
 
+// Run either prints all the configuration properties or updates configs
 func (o *ConfigOptions) Run(hc *hailconfig.Hailconfig, w io.Writer) error {
 	if o.List {
 		hc.ListConfigProperties(w)

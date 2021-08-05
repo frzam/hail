@@ -57,9 +57,8 @@ func (StandardHailConfigLoader) Load() ([]ReadWriteResetCloser, error) {
 // Init func is used to create a new .hailconfig file with title given. It checks if file is not
 // present then only it creates a .hailconfig file with title and saves it. Otherwise returns
 // error that .hailconfig is already present.
-func Init(title string) (string, error) {
+func Init(title, interpreter string) (string, error) {
 	// default interpreter is bash
-	interpreter := "bash"
 	cfgfile, err := hailconfigPath()
 	if err != nil {
 		return "", errors.Wrap(err, "cannot determine .hailconfig path")
