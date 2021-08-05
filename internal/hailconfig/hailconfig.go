@@ -2,6 +2,7 @@ package hailconfig
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/BurntSushi/toml"
@@ -27,8 +28,9 @@ type Hailconfig struct {
 // config represents the complete hailconfig file. It contains Title and
 // map Scripts.
 type config struct {
-	Title   string
-	Scripts map[string]Script `toml:"scripts"`
+	Title       string            `toml:"title"`
+	Interpreter string            `toml:"interpreter"`
+	Scripts     map[string]Script `toml:"scripts"`
 }
 
 // WithLoader takes in a loader and assigns into *Hailconfig type.
@@ -217,4 +219,30 @@ func (hc *Hailconfig) Parse() error {
 		return errors.Wrap(err, "failed to decode")
 	}
 	return nil
+}
+
+func (hc *Hailconfig) ListConfigProperties(w io.Writer) {
+	t := table.NewWriter()
+	t.SetOutputMirror(w)
+	t.AppendHeader(table.Row{"Name", "Value"})
+	t.AppendRow([]interface{}{"title", hc.config.Title})
+	t.AppendSeparator()
+	t.AppendRow([]interface{}{"interpreter", hc.config.Interpreter})
+	t.Render()
+}
+
+func (hc *Hailconfig) UpdateConfigProperties(name, value string) error {
+	if name == "" || value == "" {
+		return errors.New("invalid config name or value")
+	}
+	if name == "title" {
+		hc.config.Title = value
+		return hc.Save()
+	}
+	if name == "interpreter" {
+		hc.config.Interpreter = value
+		return hc.Save()
+	}
+
+	return errors.New("invalid property name")
 }

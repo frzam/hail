@@ -58,6 +58,8 @@ func (StandardHailConfigLoader) Load() ([]ReadWriteResetCloser, error) {
 // present then only it creates a .hailconfig file with title and saves it. Otherwise returns
 // error that .hailconfig is already present.
 func Init(title string) (string, error) {
+	// default interpreter is bash
+	interpreter := "bash"
 	cfgfile, err := hailconfigPath()
 	if err != nil {
 		return "", errors.Wrap(err, "cannot determine .hailconfig path")
@@ -69,6 +71,7 @@ func Init(title string) (string, error) {
 		}
 		hc := new(Hailconfig).WithLoader(DefaultLoader)
 		hc.config.Title = title
+		hc.config.Interpreter = interpreter
 		hc.f = &hailconfigFile{f}
 		return cfgfile, nil
 	}
