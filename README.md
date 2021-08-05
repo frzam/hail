@@ -1,6 +1,6 @@
-<div style="text-align:center">
+<div align="center">
     <h1 style= "font-weight:700">hail</h1>
-    <p><b>Cross-Platform Scripts Management CLI</b></p>
+    <p><b>Cross-Platform Scripts Management CLI written in go</b></p>
 </div>
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/frzam/hail)](https://goreportcard.com/report/github.com/frzam/hail)
@@ -75,12 +75,17 @@ hail is a cross-platfrom script management CLI written in go.
 
 # Place hail.exe into the PATH
 
-# Test if hail is working properly. Open Command Prompt, Powershell or Git bash and run.
+# Test if hail is working properly. Open Command Prompt, Powershell or Git bash and Run.
 > hail version
 
-# Initialize hailconfig, it will create .hailconfig file under $USERPROFILE. If you want to create .hailconfig anywhere else then set env HAILCONFIG to that path
+# Initialize hailconfig, it will create .hailconfig file under $USERPROFILE.
+# If you want to create .hailconfig anywhere else then set env HAILCONFIG to that path
 > hail init <title>
 
-# Generate powershell completion script.<br>
+# Generate powershell completion script
 > hail completion powershell
 ```
+
+
+# License
+hail is provided under [Apache 2.0](!https://github.com/frzam/hail/blob/master/LICENSE) license.
