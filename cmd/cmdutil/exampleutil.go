@@ -64,6 +64,16 @@ const (
   # Move using flags
   hail move -o delete-pod -n dl
 	`
+	// ConfigExample
+	ConfigExample = `  # List all config name and value
+  hail config -l
+
+  # Set default interpreter
+  hail config -n interpreter -v bash
+
+  # Set default title
+  hail config -n title -v my-config
+  `
 	// UpdateExample for update command in update.go
 	UpdateExample = `  # Update Command with 'delete-pods' alias
   hail update delete-pods "kubectl delete pod $(kubectl get pods | grep Completed | awk '{print $1}')"`

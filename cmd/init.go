@@ -41,7 +41,7 @@ func NewCmdInit(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 			}
 
 			cmdutil.CheckErr("error in init", o.Run(&hailconfig.Hailconfig{}, w))
-			cmdutil.Success(fmt.Sprintf("Initialized a file '%s'", o.CfgFile))
+			cmdutil.Success(fmt.Sprintf("Initialized a file '%s'\n", o.CfgFile))
 
 		},
 	}

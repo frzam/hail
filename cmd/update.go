@@ -27,7 +27,7 @@ func NewUpdateOption() *UpdateOptions {
 func NewCmdUpdate(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "update [alias] [command]",
-		Short:   "updates already present command.",
+		Short:   "updates already present command",
 		Example: cmdutil.UpdateExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewUpdateOption()

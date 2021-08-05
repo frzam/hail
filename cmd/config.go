@@ -24,8 +24,9 @@ func NewConfigOption() *ConfigOptions {
 // NewCmdConfig creates cmd to perform config operations
 func NewCmdConfig(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "config [flags]",
-		Short: "it is used to list or update configurations",
+		Use:     "config [flags]",
+		Short:   "it is used to list or update configurations",
+		Example: cmdutil.ConfigExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewConfigOption()
 
@@ -38,7 +39,7 @@ func NewCmdConfig(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 
 			cmdutil.CheckErr("error in run ", o.Run(hc, w))
 			if !o.List {
-				cmdutil.Success(fmt.Sprintf("config '%s' has been updated", o.Name))
+				cmdutil.Success(fmt.Sprintf("config '%s' has been updated\n", o.Name))
 			}
 		},
 	}

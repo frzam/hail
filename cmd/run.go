@@ -51,7 +51,7 @@ func NewCmdRun(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 				cmdutil.CheckErr("", fmt.Errorf("error in validation: no alias is found"))
 			}
 			if !hc.IsPresent(o.Alias) {
-				cmdutil.CheckErr("", fmt.Errorf("alias is not present: no command is found with '%s' alias", o.Alias))
+				cmdutil.CheckErr("", fmt.Errorf("alias is not present: no command is found with '%s' alias\n ", o.Alias))
 			}
 			cmdutil.CheckErr("error in run", o.Run(hc, w))
 		},

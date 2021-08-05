@@ -26,7 +26,7 @@ func NewCopyOption() *CopyOptions {
 func NewCmdCopy(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "copy [old-alias] [new-alias]",
-		Short:   "copy/cp is  used to copy one command/script to a new alias.",
+		Short:   "copy/cp is  used to copy one command/script to a new alias",
 		Example: cmdutil.CopyExample,
 		Aliases: []string{"cp"},
 		Run: func(cmd *cobra.Command, args []string) {

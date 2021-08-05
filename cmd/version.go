@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	version = "v0.1.12"
+	version = "v0.1.14"
 )
 
 // NewCmdVersion creates version cmd, it prints out the latest version when runs.

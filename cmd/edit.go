@@ -28,7 +28,7 @@ func NewEditOption() *EditOptions {
 func NewCmdEdit(loader hailconfig.Loader, w io.Writer) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "edit [alias]",
-		Short:   "It is used to edit previously added command or script in text editor.",
+		Short:   "edit previously added command or script in text editor",
 		Example: cmdutil.EditExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			o := NewEditOption()

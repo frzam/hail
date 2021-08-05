@@ -24,6 +24,36 @@
 ## About
 **hail** is a cross-platfrom script management CLI written in go. We spend lot of time in terminal, 
 
+```sh
+> hail -h
+hail is a cross-platform script management tool
+
+Usage:
+  hail [flags]
+  hail [command]
+
+Available Commands:
+  add         add is used to add a new command in collection
+  completion  generate the autocompletion script for the specified shell
+  config      it is used to list or update configurations
+  copy        copy/cp is  used to copy one command/script to a new alias
+  delete      delete/rm removes command from hail basis alias
+  edit        edit previously added command or script in text editor
+  get         get retrieves command basis the alias
+  help        Help about any command
+  init        init initializes an empty .hailconfig file with title as provided
+  list        list/ls prints all the alias and commands
+  move        move/mv used to move command with old alias to new alias
+  run         it is used to directly run a command from alias
+  update      updates already present command
+  version     version prints the current version of hail
+
+Flags:
+  -h, --help   help for hail
+
+Use "hail [command] --help" for more information about a command.
+```
+
 ## Features
 * Cross-Platform 
 * Auto Completion scripts are available (Bash, fish, zsh and powershell)
@@ -32,7 +62,6 @@
 * Single and small binary to install. (Thanks to go!)
 * Run commands or scripts directly from hail
 * Portable toml file *.hailconfig*
-* Use it as command line bookmark
 * Format of scripts or command is also preserved eg *yaml* 
 
 ## Installation
