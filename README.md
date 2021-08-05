@@ -22,7 +22,7 @@
 *  [License](#license)
 
 ## About
-hail is a cross-platfrom script management CLI written in go. 
+**hail** is a cross-platfrom script management CLI written in go. We spend lot of time in terminal, 
 
 ## Features
 * Cross-Platform 
@@ -88,4 +88,4 @@ hail is a cross-platfrom script management CLI written in go.
 
 
 # License
-hail is provided under [Apache 2.0](!https://github.com/frzam/hail/blob/master/LICENSE) license.
+hail is provided under [Apache 2.0](https://github.com/frzam/hail/blob/master/LICENSE) license.

@@ -177,27 +177,22 @@ func (e Editor) RunScript(filename string, command string) ([]byte, error) {
 		cmdList := strings.Split(command, " ")
 		interpreter = cmdList[0]
 		if len(cmdList) > 1 {
-			command = strings.Join(cmdList[1:], " ")
-		} else {
-			command = ""
+			cmdList = cmdList[1:]
 		}
-	} else {
-		return executeCmd(interpreter, filename)
+		return executeCmd(interpreter, cmdList)
 	}
-	fmt.Println("interpreter: ", interpreter)
-	return executeCmd(interpreter, command)
+	return exec.Command(interpreter, filename).Output()
+
 }
 
 // executeCmd executes the command basis the interpreter.
-func executeCmd(interpreter string, command ...string) ([]byte, error) {
-	if len(command) == 0 {
+func executeCmd(interpreter string, commands []string) ([]byte, error) {
+	if len(commands) == 1 {
 		return exec.Command(interpreter).Output()
 	}
-	fmt.Println("command: ", command)
-	cmd := exec.Command(interpreter, command...)
+	cmd := exec.Command(interpreter, commands...)
 	stderr, _ := cmd.StderrPipe()
 	stdout, _ := cmd.StdoutPipe()
-	fmt.Println("cmd: ", cmd)
 	if err := cmd.Start(); err != nil {
 		return nil, err
 	}
