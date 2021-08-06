@@ -65,7 +65,7 @@ func Init(title, interpreter string) (string, error) {
 		return "", errors.Wrap(err, "cannot determine .hailconfig path")
 	}
 	if _, err = os.Stat(cfgfile); os.IsNotExist(err) {
-		f, err := os.OpenFile(cfgfile, os.O_CREATE, 0755)
+		f, err := os.OpenFile(cfgfile, os.O_CREATE|os.O_WRONLY, 0755)
 		if err != nil {
 			return "", err
 		}

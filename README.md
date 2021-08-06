@@ -137,7 +137,7 @@ Use "hail [command] --help" for more information about a command.
 ### Linux or Unix
 ```python
 # Download the latest version of hail from releases https://github.com/frzam/hail/releases/ and unzip the file
-> wget -c https://github.com/frzam/hail/releases/download/v0.1.11/hail_0.1.11_Linux_x86_64.tar.gz -O - | tar -xz
+> wget -c https://github.com/frzam/hail/releases/download/v0.1.15/hail_0.1.15_Linux_x86_64.tar.gz -O - | tar -xz
 
 
 # Give execute permission to hail and move the binary into bin folder so it is accessible everywhere.
