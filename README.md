@@ -137,7 +137,7 @@ Use "hail [command] --help" for more information about a command.
 ### Linux or Unix
 ```python
 # Download the latest version of hail from releases https://github.com/frzam/hail/releases/ and unzip the file
-> wget -c https://github.com/frzam/hail/releases/download/v0.1.15/hail_0.1.15_Linux_x86_64.tar.gz -O - | tar -xz
+> wget -c https://github.com/frzam/hail/releases/download/v0.1.16/hail_0.1.16_Linux_x86_64.tar.gz -O - | tar -xz
 
 
 # Give execute permission to hail and move the binary into bin folder so it is accessible everywhere.
@@ -190,7 +190,7 @@ Auto completion scripts are also available for fish and zsh.
 > hail init -t my-config -i bash
 
 # Add a command and description with alias 'create-password'. Add Command in 
-# default editor tr -dc 'a-zA-Z0-9~!@#$%^&*_()+}{?></";.,[]=-'< /dev/urandom | fold -w 32 | head -n 1`
+# default editor tr -dc 'a-zA-Z0-9~!@#$%^&*_()+}{?></";.,[]=-' < /dev/urandom | fold -w 32 | head -n 1
 > hail add -a create-password -d "create a password" 
 
 # Get a command with alias 'create-password'
@@ -211,6 +211,31 @@ Auto completion scripts are also available for fish and zsh.
 # For more info on any sub command. 
 > hail <sub-command> -h
 ```
+### Run 
+We can directly run scripts which contains shebang ```#!``` and interpreter as first line.
+For example:
+```python
+#!/usr/bin/env python
+user_input=12345
+_rev=0
+while(user_input>0):
+  dig=user_input%10
+  _rev=_rev*10+dig
+  user_input=user_input//10
+print("The reversed number is :",_rev)
+
+```
+```bash
+#!/bin/bash
+echo "hello world"
+```
+hail creates a temp file and takes interpreter(In this case python or bash) from the first line and runs the file with given interpreter, later removes the file. If shebang is not present is the script then the default interpreter is taken from *.hailconfig*
+To set default interpreter use
+
+```>  hail config -n interpreter -v <interpreter-name>```
+
+> Note: Run is still in beta stage. Please feel free to reach out to me in case of any doubt at farzamcse@gmail.com and contributions are very welcome :)
+
 
 # License
 hail is provided under [Apache 2.0](https://github.com/frzam/hail/blob/master/LICENSE) license.
