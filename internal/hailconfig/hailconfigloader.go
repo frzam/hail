@@ -72,7 +72,7 @@ func Init(title, interpreter string) (string, error) {
 		hc.config.Title = title
 		hc.config.Interpreter = interpreter
 		hc.f = &hailconfigFile{f}
-		return cfgfile, nil
+		return cfgfile, hc.Save()
 	}
 	// If file is already present
 	return "", fmt.Errorf(".hailconfig is already present, can't do init at loc: %s", cfgfile)

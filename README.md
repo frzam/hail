@@ -24,7 +24,7 @@
 ## About
 **hail** is a cross-platfrom script management CLI written in go. We spend lot of time in terminal, 
 
-```sh
+```
 > hail -h
 hail is a cross-platform script management tool
 
@@ -52,6 +52,66 @@ Flags:
   -h, --help   help for hail
 
 Use "hail [command] --help" for more information about a command.
+```
+
+```
+> hail ls
++--------------------+----------------------------------------------------+----------------------+
+| ALIAS              | COMMAND                                            | DESCRIPTION          |
++--------------------+----------------------------------------------------+----------------------+
+| list-git-repo      | find ~ -name ".git" 2> /dev/null | sed 's/\/.git/\ |                      |
+|                    | //g' | awk '{print "-------------------------\n\03 |                      |
+|                    | 3[1;32mGit Repo:\033[0m " $1; system("git --git-di |                      |
+|                    | r="$1".git --work-tree="$1" status")}'             |                      |
+|                    |                                                    |                      |
++--------------------+----------------------------------------------------+----------------------+
+| log-with-exception | find . -name '*.log' -mtime -2 -exec grep -Hc Exce |                      |
+|                    | ption {} \; | grep -v :0$                          |                      |
+|                    |                                                    |                      |
++--------------------+----------------------------------------------------+----------------------+
+| pv                 | apiVersion: v1                                     | Persistence volume i |
+|                    | kind: PersistentVolume                             | n ocp                |
+|                    | metadata:                                          |                      |
+|                    |   name: pv00001                                    |                      |
+|                    | spec:                                              |                      |
+|                    |   capacity:                                        |                      |
+|                    |     storage: 10Gi                                  |                      |
+|                    |   accessModes:                                     |                      |
+|                    |     - ReadWriteOnce                                |                      |
+|                    |   persistentVolumeReclaimPolicy: Retain            |                      |
+|                    |   nfs:                                             |                      |
+|                    |     path: /mnt/nfs_shares/k8s/root/pv00001         |                      |
+|                    |     server: 192.168.10.223                         |                      |
+|                    |                                                    |                      |
++--------------------+----------------------------------------------------+----------------------+
+| scan-ports         | for i in {1..65535}; do (echo < /dev/tcp/127.0.0.1 |                      |
+|                    | /$i) &>/dev/null && printf "\n[+] Open Port at\n:  |                      |
+|                    | \t%d\n" "$i" || printf "."; done                   |                      |
+|                    |                                                    |                      |
++--------------------+----------------------------------------------------+----------------------+
+| server-sh          | `#!/bin/bash                                       |                      |
+|                    |     echo|read|{(read t;g=$(echo $t|cut -d' ' -f2)  |                      |
+|                    |     while read|grep :;do :;done;[[ -e .$g &&! $g = |                      |
+|                    |  *..* ]]||exit                                     |                      |
+|                    |     printf "HTTP/1.1 200 OK\nContent-Length: $(sta |                      |
+|                    | t -c%s .$g)\n\n"                                   |                      |
+|                    |     cat .$g)|nc -l -p $1;}>/dev/fd/0;$0 $1         |                      |
+|                    |                                                    |                      |
++--------------------+----------------------------------------------------+----------------------+
+| was-bin            | cd /opt/IBM/BPM/v8.6/profiles/managerProfile/bin   |                      |
+|                    |                                                    |                      |
++--------------------+----------------------------------------------------+----------------------+
+| create-password    | tr -dc 'a-zA-Z0-9~!@#$%^&*_()+}{?></";.,[]=-' < /d | generate a password  |
+|                    | ev/urandom | fold -w 32 | head -n 1                |                      |
+|                    |                                                    |                      |
++--------------------+----------------------------------------------------+----------------------+
+| disk-usage-by-type | find . -type f -empty -prune -o -type f -printf "% |                      |
+|                    | s\t" -exec file --brief --mime-type '{}' \; | awk  |                      |
+|                    | 'BEGIN {printf("%12s\t%12s\n","bytes","type")} {ty |                      |
+|                    | pe=$2; a[type]+=$1} END {for (i in a) printf("%12u |                      |
+|                    | \t%12s\n", a[i], i)|"sort -nr"}'                   |                      |
+|                    |                                                    |                      |
++--------------------+----------------------------------------------------+----------------------+
 ```
 
 ## Features
@@ -109,12 +169,38 @@ Use "hail [command] --help" for more information about a command.
 
 # Initialize hailconfig, it will create .hailconfig file under $USERPROFILE.
 # If you want to create .hailconfig anywhere else then set env HAILCONFIG to that path
-> hail init <title>
+> hail init -t <title> -i bash
 
 # Generate powershell completion script
 > hail completion powershell
 ```
+## Usage
+1. Init
 
+    ```> hail init -t my-config -i bash```
+
+2. Add a command with description
+
+    ```> hail add -a create-password -d "create a password" "tr -dc 'a-zA-Z0-9~!@#$%^&*_()+}{?></";.,[]=-' < /dev/urandom | fold -w 32 | head -n 1"```
+3. Get a command with alias 'create-password'
+
+    ```> hail get create-password```
+
+4. Edit a command with alias 'create-password'
+
+    ```> hail edit create-password```
+
+5. Run a command with alias 'create-password'
+
+    ```> hail run create-password```
+
+6. Delete an entry with alias 'create-password'
+
+    ```> hail rm create-password```
+
+7. List all aliases with commands and descriptions.
+
+    ```> hail ls```
 
 # License
 hail is provided under [Apache 2.0](https://github.com/frzam/hail/blob/master/LICENSE) license.
