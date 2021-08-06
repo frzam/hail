@@ -80,8 +80,8 @@ Use "hail [command] --help" for more information about a command.
 |                    |     - ReadWriteOnce                                |                      |
 |                    |   persistentVolumeReclaimPolicy: Retain            |                      |
 |                    |   nfs:                                             |                      |
-|                    |     path: /mnt/nfs_shares/k8s/root/pv00001         |                      |
-|                    |     server: 192.168.10.223                         |                      |
+|                    |     path: /mnt/path                                |                      |
+|                    |     server:                                        |                      |
 |                    |                                                    |                      |
 +--------------------+----------------------------------------------------+----------------------+
 | scan-ports         | for i in {1..65535}; do (echo < /dev/tcp/127.0.0.1 |                      |
@@ -141,7 +141,9 @@ Use "hail [command] --help" for more information about a command.
 # create .hailconfig anywhere else then set env HAILCONFIG to that path.
 > hail init <title>
 ```
-[OPTIONAL] Set up tab auto completion for bash. Auto completion scripts are also available for fish and zsh.
+#### Set up tab auto completion for bash.
+Auto completion scripts are also available for fish and zsh.
+
 ```python
     
 # Generate bash script in a file
@@ -175,32 +177,32 @@ Use "hail [command] --help" for more information about a command.
 > hail completion powershell
 ```
 ## Usage
-1. Init
+```python
+# Initialize a .hailconfig file with default interpreter set to bash
+> hail init -t my-config -i bash
 
-    ```> hail init -t my-config -i bash```
+# Add a command and description with alias 'create-password'. Add Command in 
+# default editor tr -dc 'a-zA-Z0-9~!@#$%^&*_()+}{?></";.,[]=-'< /dev/urandom | fold -w 32 | head -n 1`
+> hail add -a create-password -d "create a password" 
 
-2. Add a command with description
+# Get a command with alias 'create-password'
+> hail get create-password
 
-    ```> hail add -a create-password -d "create a password" "tr -dc 'a-zA-Z0-9~!@#$%^&*_()+}{?></";.,[]=-' < /dev/urandom | fold -w 32 | head -n 1"```
-3. Get a command with alias 'create-password'
+# Edit a command with alias 'create-password'
+> hail edit create-password
 
-    ```> hail get create-password```
+# Run a command with alias 'create-password'
+> hail run create-password
 
-4. Edit a command with alias 'create-password'
+# Delete an entry with alias 'create-password'
+> hail rm create-password
 
-    ```> hail edit create-password```
+# List all aliases with commands and descriptions.
+> hail ls
 
-5. Run a command with alias 'create-password'
-
-    ```> hail run create-password```
-
-6. Delete an entry with alias 'create-password'
-
-    ```> hail rm create-password```
-
-7. List all aliases with commands and descriptions.
-
-    ```> hail ls```
+# For more info on any sub command, 
+> hail <sub-command> -h
+```
 
 # License
 hail is provided under [Apache 2.0](https://github.com/frzam/hail/blob/master/LICENSE) license.
