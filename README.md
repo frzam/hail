@@ -1,5 +1,5 @@
 <div align="center">
-    <h1 style= "font-weight:700">hail</h1>
+    <img src="https://raw.githubusercontent.com/frzam/hail/master/.github/logo.jpg" />
     <p><b>Cross-Platform Scripts Management CLI written in go</b></p>
 </div>
 
@@ -26,10 +26,10 @@ Today we spend lots of time in terminal and there are lots of command and script
 
 **hail** has built in *fuzzy search* so you don't even have to remember complete alias name, you can simply write few alphabets of alias and you will be presented with matching alias. 
 
-**hail** also lets you run scripts(python, bash, perl, sh, bat etc) directly from hail provided script starts with **shebang**. Please refer [usage](#usage) section for more details.
+**hail** also lets you run scripts(python, bash, perl, sh, bat etc) directly from hail provided script starts with **shebang**. Please refer [usage](#usage) section for more details. This project is influenced by [pier](https://github.com/pier-cli/pier) and thank you [Nida](https://www.instagram.com/nida_fatima_khaan) for this beautiful logo.
 
 <p align="center">
-  <img src=".github/about.gif" />
+  <img src="https://raw.githubusercontent.com/frzam/hail/master/.github/about.gif" />
 </p>
 
 
@@ -154,7 +154,6 @@ Use "hail [command] --help" for more information about a command.
 Auto completion scripts are also available for fish and zsh.
 
 ```python
-    
 # Generate bash script in a file
 > hail completion bash > ~/.hail
 

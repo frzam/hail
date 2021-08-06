@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
 )
 
@@ -72,7 +73,7 @@ func Init(title, interpreter string) (string, error) {
 		hc.config.Title = title
 		hc.config.Interpreter = interpreter
 		hc.f = &hailconfigFile{f}
-		return cfgfile, hc.Save()
+		return cfgfile, toml.NewEncoder(hc.f).Encode(&hc.config)
 	}
 	// If file is already present
 	return "", fmt.Errorf(".hailconfig is already present, can't do init at loc: %s", cfgfile)
