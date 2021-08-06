@@ -11,7 +11,6 @@
 )]( https://img.shields.io/github/go-mod/go-version/frzam/hail
 )
  [![CII](https://bestpractices.coreinfrastructure.org/badge_static/72)](https://bestpractices.coreinfrastructure.org/en/projects/5082)
-> Cross-Platform script management CLI written in go.
 
 * [About](#about)
 * [Features](#features)
@@ -22,7 +21,14 @@
 *  [License](#license)
 
 ## About
-**hail** is a cross-platfrom script management CLI written in go. We spend lot of time in terminal, 
+> **hail** is a cross-platfrom script management CLI written in go. 
+
+Today we spend lots of time in terminal and there are lots of command and scripts that we have to remember and if we forget then we have to dig into history to look. hail lets you save all those useful and frequently useful commands or scripts with some alias so you can use the alias to print or directly run the command in terminal.
+
+hail has built in fuzzy search so you don't even have to remember complete alias name, you can simple write few 
+alphabets of alias and you will be presented with matching alias. 
+
+hail also lets you run scripts(python, bash, perl, sh, bat etc) directly from hail provided script starts with **shebang**. Please refer [Usage](#usage) section for more details.
 
 ```
 > hail -h
@@ -139,7 +145,7 @@ Use "hail [command] --help" for more information about a command.
 
 # Initialize hailconfig, it will create .hailconfig file under $HOME. If you want to 
 # create .hailconfig anywhere else then set env HAILCONFIG to that path.
-> hail init <title>
+> hail init <title> -i bash
 ```
 #### Set up tab auto completion for bash.
 Auto completion scripts are also available for fish and zsh.
@@ -200,7 +206,7 @@ Auto completion scripts are also available for fish and zsh.
 # List all aliases with commands and descriptions.
 > hail ls
 
-# For more info on any sub command, 
+# For more info on any sub command. 
 > hail <sub-command> -h
 ```
 
