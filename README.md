@@ -21,14 +21,17 @@
 *  [License](#license)
 
 ## About
-> **hail** is a cross-platfrom script management CLI written in go. 
 
-Today we spend lots of time in terminal and there are lots of command and scripts that we have to remember and if we forget then we have to dig into history to look. hail lets you save all those useful and frequently useful commands or scripts with some alias so you can use the alias to print or directly run the command in terminal.
+Today we spend lots of time in terminal and there are lots of command and scripts that we have to remember and if we forget then we have to dig into history to look. **hail** lets you save all those useful and frequently useful commands or scripts with some alias so you can use the alias to print or directly run the command in terminal.
 
-hail has built in fuzzy search so you don't even have to remember complete alias name, you can simple write few 
-alphabets of alias and you will be presented with matching alias. 
+**hail** has built in *fuzzy search* so you don't even have to remember complete alias name, you can simply write few alphabets of alias and you will be presented with matching alias. 
 
-hail also lets you run scripts(python, bash, perl, sh, bat etc) directly from hail provided script starts with **shebang**. Please refer [Usage](#usage) section for more details.
+**hail** also lets you run scripts(python, bash, perl, sh, bat etc) directly from hail provided script starts with **shebang**. Please refer [usage](#usage) section for more details.
+
+<p align="center">
+  <img src=".github/about.gif" />
+</p>
+
 
 ```
 > hail -h
