@@ -22,7 +22,7 @@
 
 ## About
 
-Today we spend lots of time in terminal and there are lots of command and scripts that we have to remember and if we forget then we have to dig into history to look. **hail** lets you save all those useful and frequently useful commands or scripts with some alias so you can use the alias to print or directly run the command in terminal.
+Today we spend lots of time in terminal and there are lots of command and scripts that we have to remember and if we forget then we have to dig into history to look. **hail** lets you save all those useful and frequently used commands or scripts with some alias so you can use the alias to print or directly run the command in terminal.
 
 **hail** has built in *fuzzy search* so you don't even have to remember complete alias name, you can simply write few alphabets of alias and you will be presented with matching alias. 
 
@@ -229,7 +229,8 @@ print("The reversed number is :",_rev)
 #!/bin/bash
 echo "hello world"
 ```
-hail creates a temp file and takes interpreter(In this case python or bash) from the first line and runs the file with given interpreter, later removes the file. If shebang is not present is the script then the default interpreter is taken from *.hailconfig*
+hail creates a temp file and takes interpreter(In this case python or bash) from the first line and runs the file with given interpreter, later removes the file. If shebang is not present in the script then the default interpreter is taken from *.hailconfig*
+
 To set default interpreter use
 
 ```>  hail config -n interpreter -v <interpreter-name>```
